@@ -91,7 +91,7 @@ function App() {
 
       <section id="home" className="hero section">
         <div className="hero-copy">
-          <div className="eyebrow"><span /> SOFTWARE ENGINEER · BACKEND</div>
+          <div className="eyebrow"><span /> SOFTWARE ENGINEER</div>
 
           <h1>
             Eu transformo
@@ -103,7 +103,7 @@ function App() {
 
           <p className="hero-text">
             Sou Matheus Carlos, desenvolvedor focado em Backend, Java, Kotlin e
-            Python. Gosto de entender o problema antes de escrever o código —
+            Python. Gosto de entender o problema antes de escrever o código
             e construir soluções simples, testáveis e preparadas para crescer.
           </p>
 
@@ -118,7 +118,7 @@ function App() {
 
           <div className="hero-meta">
             <span>Java · Kotlin · Python</span>
-            <span>Arquitetura · Cloud · Dados</span>
+            <span>Arquitetura · Cloud · Observabilidade</span>
           </div>
         </div>
 
@@ -142,14 +142,10 @@ function App() {
           </div>
           <div className="about-copy">
             <p>
-              Minha experiência combina tecnologia, dados e visão de negócio.
-              Como CX Data Analyst, trabalho com SQL e Python para transformar
-              informação em decisão — uma perspectiva que levo para o
-              desenvolvimento de software.
+              Trago uma perspectiva analítica e orientada a dados para o desenvolvimento de software. Minha experiência prévia me ensinou a transformar problemas complexos em requisitos claros e decisões arquiteturais robustas. Hoje, atuo como Engenheiro de Software projetando sistemas eficientes, garantindo código limpo, boa manutenibilidade e alinhamento direto com as necessidades estratégicas do negócio.
             </p>
             <p>
-              Estou construindo minha carreira como Software Engineer, com foco
-              em Backend, arquitetura limpa, APIs, sistemas distribuídos,
+              Meu atual foco é em Backend, arquitetura limpa, APIs, sistemas distribuídos,
               observabilidade, testes e cloud.
             </p>
             <div className="principles">
@@ -245,12 +241,12 @@ function App() {
 
       <section className="cta section">
         <div className="cta-glow" />
-        <div className="section-label">05 / PRÓXIMO PASSO</div>
-        <h2>Vamos construir algo<br /><em>que valha a pena.</em></h2>
-        <p>Estou aberto a oportunidades de Software Engineering, especialmente em Backend, Java, Kotlin e Python.</p>
+        <div className="section-label">05 / CONTATO</div>
+        <h2>Construindo soluções robustas<br /><em>de ponta a ponta.</em></h2>
+        <p>Aberto a posições de Software Engineer (Backend / Java / Kotlin / Python) para somar em equipes orientadas a excelência técnica.</p>
         <div className="actions centered">
-          <a className="primary" href={links.linkedin} target="_blank" rel="noreferrer">Falar comigo <Arrow /></a>
-          <a className="secondary" href={links.github} target="_blank" rel="noreferrer">Explorar meu GitHub <Arrow /></a>
+          <a className="primary" href={links.linkedin} target="_blank" rel="noreferrer">Vamos conversar <Arrow /></a>
+          <a className="secondary" href={links.github} target="_blank" rel="noreferrer">Ver projetos no GitHub <Arrow /></a>
         </div>
       </section>
 
