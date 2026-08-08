@@ -54,6 +54,14 @@ const projects = [
     tags: ["Python", "SQL", "Machine Learning"],
     github: "https://github.com/Matheuszy/projeto-ML-previsao-dados-credito",
   },
+  {
+    name: "Code Connect",
+    label: "AI Engineering",
+    description:
+      "Estudo prático de Context Engineering com Claude Code: exploração de base de código, automação com Lighthouse CI, geração de componentes via Figma + MCP e configuração de agentes com CLAUDE.md e AGENTS.md.",
+    tags: ["Node.js", "NestJS", "Claude Code", "Context Engineering", "MCP"],
+    github: "https://github.com/Matheuszy/code-connect",
+  },
 ];
 
 const stack = [
@@ -144,7 +152,7 @@ function App() {
             <p>
               Minha experiência combina tecnologia, dados e visão de negócio.
               Como CX Data Analyst, trabalho com SQL e Python para transformar
-              informação em decisão — uma perspectiva que levo para o
+              informação em decisão, uma perspectiva que levo para o
               desenvolvimento de software.
             </p>
             <p>
