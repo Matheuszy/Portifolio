@@ -64,6 +64,29 @@ const projects = [
   },
 ];
 
+const certifications = [
+  {
+    title: "AWS Certified AI Practitioner",
+    issuer: "Amazon Web Services",
+    icon: "☁️",
+  },
+  {
+    title: "AWS Certified Cloud Practitioner",
+    issuer: "Amazon Web Services",
+    icon: "☁️",
+  },
+  {
+    title: "Oracle Cloud Infrastructure Foundations",
+    issuer: "Oracle OCI",
+    icon: "🔶",
+  },
+  {
+    title: "Engenharia de Software",
+    issuer: "Alura",
+    icon: "🎓",
+  },
+];
+
 const stack = [
   "Java", "Kotlin", "Spring Boot", "Python", "FastAPI", "PostgreSQL",
   "Docker", "Kafka", "RabbitMQ", "AWS", "Kubernetes", "GitHub Actions",
@@ -91,6 +114,7 @@ function App() {
         <div className="nav-links">
           <button onClick={() => scrollTo("about")}>Sobre</button>
           <button onClick={() => scrollTo("projects")}>Projetos</button>
+          <button onClick={() => scrollTo("certifications")}>Certificações</button>
           <button onClick={() => scrollTo("stack")}>Stack</button>
           <a href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn <Arrow /></a>
           <a href={links.github} target="_blank" rel="noreferrer">GitHub <Arrow /></a>
@@ -157,7 +181,8 @@ function App() {
             </p>
             <p>
               Meu atual foco é em Backend, arquitetura limpa, APIs, sistemas distribuídos,
-              observabilidade, testes e cloud.
+              observabilidade, testes e cloud. Tenho formação em Engenharia de Software pela
+              Alura e certificações AWS e Oracle que reforçam minha visão de sistemas modernos.
             </p>
             <div className="principles">
               <div><b>01</b><span>Entender antes de implementar</span></div>
@@ -219,8 +244,28 @@ function App() {
         </div>
       </section>
 
+      <section id="certifications" className="section">
+        <div className="section-label">03 / CERTIFICAÇÕES & FORMAÇÃO</div>
+        <div className="section-heading">
+          <div>
+            <h2>Conhecimento <em>validado.</em></h2>
+          </div>
+        </div>
+        <div className="certs-grid">
+          {certifications.map((cert) => (
+            <div className="cert-card" key={cert.title}>
+              <span className="cert-icon">{cert.icon}</span>
+              <div>
+                <strong>{cert.title}</strong>
+                <small>{cert.issuer}</small>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section id="stack" className="section stack-section">
-        <div className="section-label">03 / STACK</div>
+        <div className="section-label">04 / STACK</div>
         <div className="stack-layout">
           <div>
             <h2>Ferramentas para<br /><em>resolver problemas.</em></h2>
@@ -236,7 +281,7 @@ function App() {
       </section>
 
       <section className="section engineering">
-        <div className="section-label">04 / COMO EU PENSO</div>
+        <div className="section-label">05 / COMO EU PENSO</div>
         <div className="engineering-grid">
           <div>
             <h2>Software bom não é só código que <em>funciona.</em></h2>
@@ -252,7 +297,7 @@ function App() {
 
       <section className="cta section">
         <div className="cta-glow" />
-        <div className="section-label">05 / CONTATO</div>
+        <div className="section-label">06 / CONTATO</div>
         <h2>Construindo soluções robustas<br /><em>de ponta a ponta.</em></h2>
         <p>Aberto a posições de Software Engineer (Backend / Java / Kotlin / Python) para somar em equipes orientadas a excelência técnica.</p>
         <div className="actions centered">
