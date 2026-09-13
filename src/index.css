@@ -353,6 +353,47 @@ h2 {
 .project-action { align-self: flex-start; margin-top: 22px; }
 .project-action:hover, .project-top a:hover { color: white; }
 
+/* Certifications */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.cert-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(255,255,255,.025), rgba(139,92,246,.025));
+  transition: .25s ease;
+}
+
+.cert-card:hover {
+  border-color: rgba(139,92,246,.35);
+  background: linear-gradient(145deg, rgba(139,92,246,.08), rgba(255,255,255,.02));
+}
+
+.cert-icon { font-size: 28px; flex-shrink: 0; }
+
+.cert-card strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  margin-bottom: 4px;
+}
+
+.cert-card small {
+  color: var(--muted);
+  font: 11px "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
 .stack-section { border-top: 1px solid var(--line); }
 
 .stack-cloud { display: flex; align-content: start; flex-wrap: wrap; gap: 10px; }
@@ -453,6 +494,7 @@ footer a { color: #9c8ac4; }
   .radar-card { grid-template-columns: 1fr; }
   .radar-items { grid-template-columns: 1fr; }
   .projects-grid { grid-template-columns: 1fr; }
+  .certs-grid { grid-template-columns: 1fr; }
   .section { padding: 90px 0; }
   .section-heading { align-items: start; flex-direction: column; }
   footer { flex-direction: column; }
