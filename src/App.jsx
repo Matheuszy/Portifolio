@@ -1,787 +1,582 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const links = {
-  linkedin: "https://www.linkedin.com/in/matheus-almeida-497050244/",
-  github: "https://github.com/Matheuszy",
-};
+import {
+  links,
+  projects,
+  certifications,
+  stackGroups,
+  descpayActivities,
+  engineeringPrinciples,
+} from "./portfolioData";
 
-const projects = [
-  {
-    name: "Basilico",
-    label: "Management API",
-    description:
-      "API REST em Java 17 e Spring Boot, construída com Arquitetura Hexagonal, SOLID, Clean Code, JWT, persistência relacional e testes automatizados.",
-    tags: ["Java 17", "Spring Boot", "JPA", "PostgreSQL", "JUnit"],
-    github: "https://github.com/Matheuszy/Basilico",
-  },
-  {
-    name: "Multi-Tenant Inventory",
-    label: "Estoque & PDV",
-    description:
-      "Sistema de gestão de estoque e PDV multi-tenant, pensado para manter diferentes clientes isolados dentro de uma única aplicação.",
-    tags: ["Java", "Spring Boot", "Multi-tenancy", "PostgreSQL"],
-    github: "https://github.com/Codex-System/Sistema-de-estoque",
-  },
-  {
-    name: "Sentinel",
-    label: "Fraud Detection",
-    description:
-      "Sistema de detecção de fraude em Python e Machine Learning, com pipeline de análise para identificar padrões suspeitos.",
-    tags: ["Python", "Machine Learning", "Data Analysis"],
-    github: "https://github.com/Matheuszy/Projeto-sentinel",
-  },
-  {
-    name: "Smart Product Recommender",
-    label: "AI Engine",
-    description:
-      "Engine que combina Cadeia de Markov, Rede Bayesiana, Motor de Decisão e A* para determinar o próximo passo do cliente e expor a recomendação via API.",
-    tags: ["Python", "FastAPI", "Markov", "Bayes", "A*"],
-    github: "https://github.com/Matheuszy/srmart-recommender",
-  },
-  {
-    name: "Java Microservices",
-    label: "Distributed Systems",
-    description:
-      "Coleção de microsserviços em Java explorando arquitetura distribuída, comunicação entre serviços e padrões comuns de sistemas modernos.",
-    tags: ["Java", "Microservices", "Distributed Systems"],
-    github: "https://github.com/Matheuszy/microsservi-os-java",
-  },
-  {
-    name: "Credit Prediction",
-    label: "Analytics",
-    description:
-      "Análise e previsão de crédito usando Python, SQL e Machine Learning para trabalhar com dados de risco e modelos preditivos.",
-    tags: ["Python", "SQL", "Machine Learning"],
-    github: "https://github.com/Matheuszy/projeto-ML-previsao-dados-credito",
-  },
-  {
-    name: "Code Connect",
-    label: "AI Engineering",
-    description:
-      "Estudo prático de Context Engineering com Claude Code: exploração de base de código, automação com Lighthouse CI, geração de componentes via Figma + MCP e configuração de agentes com CLAUDE.md e AGENTS.md.",
-    tags: [
-      "Node.js",
-      "NestJS",
-      "Claude Code",
-      "Context Engineering",
-      "MCP",
-    ],
-    github: "https://github.com/Matheuszy/code-connect",
-  },
-];
+import "./index.css";
 
-const certifications = [
-  {
-    title: "AWS Certified AI Practitioner",
-    issuer: "Amazon Web Services",
-    icon: "☁️",
-  },
-  {
-    title: "Oracle Cloud Infrastructure Foundations",
-    issuer: "Oracle OCI",
-    icon: "🔶",
-  },
-  {
-    title: "Engenharia de Software",
-    issuer: "Alura",
-    icon: "🎓",
-  },
-];
+function SectionCard({
+  id,
+  number,
+  label,
+  title,
+  children,
+  active,
+  onActivate,
+  className = "",
+}) {
+  return (
+    <article
+      id={id}
+      className={`stack-card ${active ? "active" : ""} ${className}`}
+      onClick={() => onActivate(id)}
+    >
+      <div className="card-glow" />
 
-const stack = [
-  "Java",
-  "Kotlin",
-  "Spring Boot",
-  "Python",
-  "FastAPI",
-  "PostgreSQL",
-  "Docker",
-  "Kafka",
-  "RabbitMQ",
-  "AWS",
-  "Kubernetes",
-  "GitHub Actions",
-  "Prometheus",
-  "Grafana",
-  "OpenTelemetry",
-  "SQL",
-  "AI Agents",
-];
+      <header className="card-header">
+        <span className="card-number">{number}</span>
+        <span className="card-label">{label}</span>
+      </header>
 
-const descpaySkills = [
-  "Java",
-  "Kotlin",
-  "Spring Boot",
-  "REST APIs",
-  "PostgreSQL",
-  "Payment Integrations",
-  "Async Processing",
-  "Automated Testing",
-  "Docker",
-  "AWS",
-];
+      <div className="card-title">
+        <h2>{title}</h2>
+      </div>
 
-const descpayActivities = [
-  {
-    number: "01",
-    title: "Backend & APIs",
-    description:
-      "Desenvolvimento e manutenção de funcionalidades backend e APIs REST, trabalhando principalmente com Java, Kotlin e Spring Boot.",
-    tags: ["Java", "Kotlin", "Spring Boot", "REST"],
-  },
-  {
-    number: "02",
-    title: "Regras de Negócio",
-    description:
-      "Implementação de novas funcionalidades e regras relacionadas a vendas, pagamentos e processos de gestão financeira.",
-    tags: ["Business Rules", "Payments", "Sales"],
-  },
-  {
-    number: "03",
-    title: "Integrações",
-    description:
-      "Integração com APIs e serviços externos, incluindo serviços de pagamento e parceiros envolvidos nos fluxos financeiros.",
-    tags: ["APIs", "Payments", "Integrations"],
-  },
-  {
-    number: "04",
-    title: "PostgreSQL",
-    description:
-      "Construção de queries, relacionamento entre dados, migrations e análise de questões relacionadas à performance do banco.",
-    tags: ["PostgreSQL", "SQL", "Migrations"],
-  },
-  {
-    number: "05",
-    title: "Processamento Assíncrono",
-    description:
-      "Desenvolvimento e manutenção de jobs e processos assíncronos para rotinas financeiras e fluxos de importação e exportação.",
-    tags: ["Async", "Jobs", "Financial Processing"],
-  },
-  {
-    number: "06",
-    title: "Testes & Qualidade",
-    description:
-      "Criação e manutenção de testes automatizados, além de investigação de bugs e análise de causa raiz para reduzir problemas no sistema.",
-    tags: ["Unit Tests", "Automation", "Root Cause"],
-  },
-  {
-    number: "07",
-    title: "Docker & AWS",
-    description:
-      "Uso de containers e serviços de cloud no desenvolvimento, execução e investigação de problemas relacionados aos ambientes.",
-    tags: ["Docker", "AWS", "Deployment"],
-  },
-  {
-    number: "08",
-    title: "Performance & Evolução",
-    description:
-      "Investigação de problemas de performance, organização do código e evolução gradual da arquitetura conforme as necessidades do produto.",
-    tags: ["Performance", "Architecture", "Code Quality"],
-  },
-];
+      <div className="card-content">{children}</div>
+    </article>
+  );
+}
 
-function Arrow() {
-  return <span aria-hidden="true">↗</span>;
+function TagList({ items }) {
+  return (
+    <div className="tag-list">
+      {items.map((item) => (
+        <span className="tag" key={item}>
+          {item}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ProjectCard({ project, onOpen }) {
+  return (
+    <button
+      className="project-card"
+      onClick={(event) => {
+        event.stopPropagation();
+        onOpen(project);
+      }}
+    >
+      <div className="project-top">
+        <span className="project-number">{project.number}</span>
+
+        <span className="project-arrow">↗</span>
+      </div>
+
+      <div>
+        <span className="project-category">{project.category}</span>
+
+        <h3>{project.title}</h3>
+
+        <p>{project.description}</p>
+      </div>
+
+      <TagList items={project.stack} />
+    </button>
+  );
+}
+
+function CertificationCard({ certification }) {
+  return (
+    <div className={`cert-card ${certification.featured ? "featured" : ""}`}>
+      <div className="cert-icon">{certification.icon}</div>
+
+      <div>
+        <span>{certification.issuer}</span>
+        <h3>{certification.title}</h3>
+      </div>
+    </div>
+  );
 }
 
 function App() {
+  const [activeCard, setActiveCard] = useState("intro");
   const [activeProject, setActiveProject] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const scrollTo = (id) =>
+  const activateCard = (id) => {
+    setActiveCard(id);
+  };
+
+  const scrollTo = (id) => {
+    setMenuOpen(false);
+
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth",
+      block: "start",
     });
 
-  return (
-    <main>
-      {/* NAV */}
-      <nav className="nav">
-        <button className="brand" onClick={() => scrollTo("home")}>
-          <span className="brand-mark">M</span>
+    setActiveCard(id);
+  };
 
-          <span>
-            Matheus<span className="muted">.dev</span>
-          </span>
+  useEffect(() => {
+    if (!activeProject) return;
+
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setActiveProject(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeProject]);
+
+  return (
+    <>
+      <nav className="navbar">
+        <button
+          className="brand"
+          onClick={() => scrollTo("intro")}
+          aria-label="Voltar ao início"
+        >
+          <span className="brand-mark">M</span>
+          <span>MATHEUS.DEV</span>
         </button>
 
-        <div className="nav-links">
+        <div className={`nav-links ${menuOpen ? "open" : ""}`}>
           <button onClick={() => scrollTo("about")}>Sobre</button>
-
-          <button onClick={() => scrollTo("experience")}>
-            Experiência
-          </button>
-
-          <button onClick={() => scrollTo("projects")}>
-            Projetos
-          </button>
-
+          <button onClick={() => scrollTo("experience")}>Experiência</button>
+          <button onClick={() => scrollTo("projects")}>Projetos</button>
           <button onClick={() => scrollTo("certifications")}>
             Certificações
           </button>
+          <button onClick={() => scrollTo("contact")}>Contato</button>
+        </div>
 
-          <button onClick={() => scrollTo("stack")}>
-            Stack
-          </button>
-
+        <div className="nav-social">
           <a
             href={links.linkedin}
             target="_blank"
             rel="noreferrer"
+            aria-label="LinkedIn"
           >
-            LinkedIn <Arrow />
+            in
           </a>
 
           <a
             href={links.github}
             target="_blank"
             rel="noreferrer"
+            aria-label="GitHub"
           >
-            GitHub <Arrow />
+            GH
           </a>
         </div>
+
+        <button
+          className="menu-button"
+          onClick={() => setMenuOpen((value) => !value)}
+          aria-label="Abrir menu"
+          aria-expanded={menuOpen}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </nav>
 
-      {/* HERO */}
-      <section id="home" className="hero section">
-        <div className="hero-copy">
-          <div className="eyebrow">
-            <span /> SOFTWARE ENGINEER JR.
-          </div>
+      <main className="portfolio">
+        <div className="stack-container">
+          {/* INTRO */}
+          <SectionCard
+            id="intro"
+            number="01"
+            label="INTRO"
+            title="Software Engineer"
+            active={activeCard === "intro"}
+            onActivate={activateCard}
+            className="hero-card"
+          >
+            <div className="hero-grid">
+              <div className="hero-copy">
+                <p className="eyebrow">
+                  BACKEND • DISTRIBUTED SYSTEMS • AI ENGINEERING
+                </p>
 
-          <h1>
-            Eu transformo
-            <br />
-            <em>problemas complexos</em>
-            <br />
-            em software.
-          </h1>
+                <h1>
+                  Eu transformo
+                  <span> problemas complexos</span> em software.
+                </h1>
 
-          <p className="hero-text">
-            Sou Matheus Carlos, Software Engineer com foco em Backend,
-            Java, Kotlin e Python. Gosto de entender o problema antes de
-            escrever o código e construir soluções simples, testáveis,
-            escaláveis e preparadas para crescer.
-          </p>
+                <p className="hero-description">
+                  Software Engineer focado em backend, Java, Kotlin e Python,
+                  construindo APIs, sistemas distribuídos, integrações
+                  financeiras e soluções com IA.
+                </p>
 
-          <div className="actions">
-            <button
-              className="primary"
-              onClick={() => scrollTo("projects")}
-            >
-              Ver projetos <Arrow />
-            </button>
+                <div className="hero-actions">
+                  <button
+                    className="primary-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      scrollTo("projects");
+                    }}
+                  >
+                    Ver projetos
+                    <span>↗</span>
+                  </button>
 
-            <a
-              className="secondary"
-              href={links.linkedin}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Conectar no LinkedIn <Arrow />
-            </a>
-          </div>
-
-          <div className="hero-meta">
-            <span>Java · Kotlin · Spring Boot</span>
-            <span>Backend · Cloud · Distributed Systems</span>
-          </div>
-        </div>
-
-        <div className="hero-orbit" aria-hidden="true">
-          <div className="orbit orbit-1" />
-          <div className="orbit orbit-2" />
-          <div className="orbit orbit-3" />
-
-          <div className="core">
-            <span>01</span>
-            <strong>BUILD</strong>
-            <small>MEASURE · IMPROVE</small>
-          </div>
-        </div>
-      </section>
-
-      {/* ABOUT */}
-      <section id="about" className="section about">
-        <div className="section-label">01 / SOBRE</div>
-
-        <div className="about-grid">
-          <div>
-            <h2>
-              Não começo pelo código.
-              <br />
-              <em>Começo pelo problema.</em>
-            </h2>
-          </div>
-
-          <div className="about-copy">
-            <p>
-              Minha experiência combina engenharia de software, dados e
-              visão de negócio. Atualmente atuo como Software Engineer Jr.,
-              com foco em backend e desenvolvimento de sistemas para
-              operações de vendas, pagamentos e gestão financeira.
-            </p>
-
-            <p>
-              Minha experiência anterior em dados e BI também contribui
-              para uma visão mais ampla sobre processos, performance,
-              automação e tomada de decisão. Levo essa perspectiva para
-              o desenvolvimento de software e para a construção de
-              soluções orientadas ao negócio.
-            </p>
-
-            <p>
-              Meu foco atual está em Backend, arquitetura limpa, APIs,
-              sistemas distribuídos, observabilidade, testes e cloud.
-              Também venho aprofundando meus conhecimentos em IA e
-              engenharia de software orientada a agentes.
-            </p>
-
-            <div className="principles">
-              <div>
-                <b>01</b>
-                <span>Entender antes de implementar</span>
+                  <a
+                    className="secondary-button"
+                    href={links.whatsapp}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    Falar comigo
+                  </a>
+                </div>
               </div>
 
-              <div>
-                <b>02</b>
-                <span>Projetar para manutenção</span>
+              <div className="hero-visual">
+                <div className="orbital orbital-one" />
+                <div className="orbital orbital-two" />
+                <div className="orbital orbital-three" />
+
+                <div className="hero-core">
+                  <span>JAVA</span>
+                  <strong>+</strong>
+                  <span>AI</span>
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+
+          {/* ABOUT */}
+          <SectionCard
+            id="about"
+            number="02"
+            label="ABOUT"
+            title="Sobre mim"
+            active={activeCard === "about"}
+            onActivate={activateCard}
+          >
+            <div className="about-grid">
+              <div className="about-main">
+                <p className="section-intro">
+                  Minha trajetória começou em uma área de negócios, onde tive
+                  contato direto com processos, operações internacionais e
+                  automação. Com o tempo, passei a transformar esse
+                  conhecimento em soluções de software.
+                </p>
+
+                <p>
+                  Hoje meu foco está no desenvolvimento backend e na construção
+                  de sistemas que precisam ser organizados, escaláveis e fáceis
+                  de evoluir.
+                </p>
+
+                <p>
+                  Trabalho principalmente com Java, Kotlin, Spring Boot e
+                  Python, enquanto exploro arquitetura distribuída, cloud,
+                  DevOps e engenharia de IA.
+                </p>
               </div>
 
-              <div>
-                <b>03</b>
-                <span>Medir para melhorar</span>
+              <div className="about-side">
+                <div className="info-block">
+                  <span>FOCO ATUAL</span>
+                  <strong>Backend Engineering</strong>
+                </div>
+
+                <div className="info-block">
+                  <span>ECOSSISTEMA</span>
+                  <strong>Java • Kotlin • Python</strong>
+                </div>
+
+                <div className="info-block">
+                  <span>DIFERENCIAL</span>
+                  <strong>Software + AI</strong>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* RADAR */}
-      <section className="section radar">
-        <div className="radar-card">
-          <div>
-            <span className="status">● MOMENTO ATUAL</span>
-
-            <h3>Construindo o próximo nível.</h3>
-          </div>
-
-          <div className="radar-items">
-            <div>
-              <small>ATUANDO COMO</small>
-
-              <strong>
-                Software Engineer Jr. — Backend
-              </strong>
+            <div className="status-line">
+              <span className="status-dot" />
+              <span>Construindo. Aprendendo. Evoluindo.</span>
             </div>
+          </SectionCard>
 
-            <div>
-              <small>APROFUNDANDO</small>
+          {/* EXPERIENCE */}
+          <SectionCard
+            id="experience"
+            number="03"
+            label="EXPERIENCE"
+            title="Experiência"
+            active={activeCard === "experience"}
+            onActivate={activateCard}
+          >
+            <div className="experience-heading">
+              <div>
+                <span className="company-label">DESCPAY</span>
+                <h3>Software Engineer Jr.</h3>
+              </div>
 
-              <strong>
-                Distributed Systems · Cloud · AI Engineering
-              </strong>
-            </div>
-
-            <div>
-              <small>CONSTRUINDO</small>
-
-              <strong>
-                Sistemas robustos, escaláveis e orientados ao negócio
-              </strong>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* EXPERIENCE */}
-      <section id="experience" className="section experience">
-        <div className="section-heading">
-          <div>
-            <div className="section-label">
-              02 / EXPERIÊNCIA
-            </div>
-
-            <h2>
-              Onde eu <em>construo.</em>
-            </h2>
-          </div>
-        </div>
-
-        <article className="experience-card">
-          <div className="experience-header">
-            <div>
-              <span className="project-label">
-                SOFTWARE ENGINEERING
+              <span className="experience-type">
+                Backend • Payments • Financial Systems
               </span>
-
-              <h3>Software Engineer Jr.</h3>
-
-              <p className="experience-company">
-                DescPay
-              </p>
             </div>
 
-            <div className="experience-badge">
-              <span>BACKEND</span>
-              <span>PAYMENTS</span>
-              <span>FINANCIAL SYSTEMS</span>
-            </div>
-          </div>
-
-          <div className="experience-intro">
-            <p>
-              Atuação no desenvolvimento e evolução de sistemas backend
-              voltados às operações de vendas, pagamentos e gestão
-              financeira, trabalhando com regras de negócio, integrações,
-              processamento de dados, qualidade de software e evolução
-              da arquitetura.
+            <p className="experience-description">
+              Desenvolvimento de soluções backend para o ecossistema de
+              pagamentos, trabalhando com APIs, regras financeiras, integrações
+              externas, processamento assíncrono e evolução de sistemas.
             </p>
-          </div>
 
-          <div className="experience-divider">
-            <span>ATUAÇÃO</span>
-          </div>
+            <div className="activity-grid">
+              {descpayActivities.map((activity) => (
+                <div className="activity-card" key={activity.number}>
+                  <span>{activity.number}</span>
 
-          <div className="experience-grid">
-            {descpayActivities.map((activity) => (
-              <article
-                className="experience-activity"
-                key={activity.number}
-              >
-                <div className="activity-top">
-                  <span className="activity-number">
-                    {activity.number}
-                  </span>
-
-                  <span className="activity-arrow">
-                    ↗
-                  </span>
+                  <div>
+                    <h4>{activity.title}</h4>
+                    <p>{activity.text}</p>
+                  </div>
                 </div>
-
-                <h4>{activity.title}</h4>
-
-                <p>{activity.description}</p>
-
-                <div className="activity-tags">
-                  {activity.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="experience-stack">
-            <div className="experience-divider">
-              <span>TECNOLOGIAS & PRÁTICAS</span>
-            </div>
-
-            <div className="experience-stack-list">
-              {descpaySkills.map((skill) => (
-                <span key={skill}>{skill}</span>
               ))}
             </div>
-          </div>
-        </article>
-      </section>
+          </SectionCard>
 
-      {/* PROJECTS */}
-      <section id="projects" className="section">
-        <div className="section-heading">
-          <div>
-            <div className="section-label">
-              03 / PROJETOS
+          {/* PROJECTS */}
+          <SectionCard
+            id="projects"
+            number="04"
+            label="PROJECTS"
+            title="Projetos"
+            active={activeCard === "projects"}
+            onActivate={activateCard}
+            className="projects-section"
+          >
+            <div className="projects-intro">
+              <p>
+                Projetos que representam meu processo de aprendizado,
+                experimentação e construção de software.
+              </p>
+
+              <span>{projects.length} projetos selecionados</span>
             </div>
 
-            <h2>
-              Coisas que eu <em>construí.</em>
-            </h2>
-          </div>
+            <div className="projects-grid">
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  onOpen={setActiveProject}
+                />
+              ))}
+            </div>
+          </SectionCard>
 
-          <a
-            href={links.github}
-            target="_blank"
-            rel="noreferrer"
-            className="text-link"
+          {/* CERTIFICATIONS */}
+          <SectionCard
+            id="certifications"
+            number="05"
+            label="CERTIFICATIONS"
+            title="Certificações & Stack"
+            active={activeCard === "certifications"}
+            onActivate={activateCard}
           >
-            Ver GitHub <Arrow />
-          </a>
-        </div>
+            <div className="certifications-grid">
+              <div className="certifications-column">
+                <div className="subsection-heading">
+                  <span>01</span>
+                  <h3>Certificações</h3>
+                </div>
 
-        <div className="projects-grid">
-          {projects.map((project, index) => (
-            <article
-              className="project-card"
-              key={project.name}
-            >
-              <div className="project-top">
-                <span className="project-number">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Abrir ${project.name} no GitHub`}
-                >
-                  GitHub <Arrow />
-                </a>
+                <div className="cert-list">
+                  {certifications.map((certification) => (
+                    <CertificationCard
+                      key={certification.title}
+                      certification={certification}
+                    />
+                  ))}
+                </div>
               </div>
 
-              <span className="project-label">
-                {project.label}
-              </span>
+              <div className="stack-column">
+                <div className="subsection-heading">
+                  <span>02</span>
+                  <h3>Tech Stack</h3>
+                </div>
 
-              <h3>{project.name}</h3>
+                <div className="stack-groups">
+                  {stackGroups.map((group) => (
+                    <div className="stack-group" key={group.title}>
+                      <span>{group.title}</span>
 
-              <p>{project.description}</p>
+                      <TagList items={group.items} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </SectionCard>
 
-              <div className="tags">
-                {project.tags.map((tag) => (
-                  <span key={tag}>{tag}</span>
+          {/* ENGINEERING */}
+          <SectionCard
+            id="engineering"
+            number="06"
+            label="ENGINEERING"
+            title="Como eu penso"
+            active={activeCard === "engineering"}
+            onActivate={activateCard}
+          >
+            <div className="engineering-grid">
+              <div className="engineering-intro">
+                <span className="big-number">06</span>
+
+                <p>
+                  Tecnologia é consequência. Antes dela vem o problema, o
+                  contexto e as decisões que precisam ser tomadas.
+                </p>
+
+                <p>
+                  Meu objetivo é construir soluções que façam sentido para o
+                  negócio e que continuem fazendo sentido quando o sistema
+                  crescer.
+                </p>
+              </div>
+
+              <div className="principles">
+                {engineeringPrinciples.map((principle, index) => (
+                  <div className="principle" key={principle}>
+                    <span>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <p>{principle}</p>
+                  </div>
                 ))}
               </div>
-
-              <button
-                className="project-action"
-                onClick={() => setActiveProject(project)}
-              >
-                Detalhes <Arrow />
-              </button>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* CERTIFICATIONS */}
-      <section id="certifications" className="section">
-        <div className="section-label">
-          04 / CERTIFICAÇÕES & FORMAÇÃO
-        </div>
-
-        <div className="section-heading">
-          <div>
-            <h2>
-              Conhecimento <em>validado.</em>
-            </h2>
-          </div>
-        </div>
-
-        <div className="certs-grid">
-          {certifications.map((cert) => (
-            <div className="cert-card" key={cert.title}>
-              <span className="cert-icon">
-                {cert.icon}
-              </span>
-
-              <div>
-                <strong>{cert.title}</strong>
-                <small>{cert.issuer}</small>
-              </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </SectionCard>
 
-      {/* STACK */}
-      <section id="stack" className="section stack-section">
-        <div className="section-label">05 / STACK</div>
-
-        <div className="stack-layout">
-          <div>
-            <h2>
-              Ferramentas para
-              <br />
-              <em>resolver problemas.</em>
-            </h2>
-
-            <p>
-              Uma stack centrada em backend, mas sem perder a visão de
-              dados, infraestrutura, observabilidade, cloud e
-              inteligência artificial.
-            </p>
-          </div>
-
-          <div className="stack-cloud">
-            {stack.map((item) => (
-              <span key={item}>{item}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ENGINEERING */}
-      <section className="section engineering">
-        <div className="section-label">
-          06 / COMO EU PENSO
-        </div>
-
-        <div className="engineering-grid">
-          <div>
-            <h2>
-              Software bom não é só código que{" "}
-              <em>funciona.</em>
-            </h2>
-          </div>
-
-          <div className="engineering-list">
-            <div>
-              <span>01</span>
-
-              <div>
-                <h3>Arquitetura</h3>
-
-                <p>
-                  Separação de responsabilidades, baixo acoplamento e
-                  decisões que facilitam evolução.
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <span>02</span>
-
-              <div>
-                <h3>Qualidade</h3>
-
-                <p>
-                  Testes automatizados, Clean Code e CI para reduzir
-                  regressões antes da entrega.
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <span>03</span>
-
-              <div>
-                <h3>Observabilidade</h3>
-
-                <p>
-                  Métricas, logs e tracing para entender o comportamento
-                  real do sistema.
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <span>04</span>
-
-              <div>
-                <h3>Negócio</h3>
-
-                <p>
-                  Uma solução técnica só é boa quando resolve o problema
-                  que realmente importa.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="cta section">
-        <div className="cta-glow" />
-
-        <div className="section-label">
-          07 / CONTATO
-        </div>
-
-        <h2>
-          Construindo soluções robustas
-          <br />
-          <em>de ponta a ponta.</em>
-        </h2>
-
-        <p>
-          Software Engineer focado em Backend, Java e Kotlin, com
-          interesse em sistemas distribuídos, cloud, arquitetura e
-          inteligência artificial.
-        </p>
-
-        <div className="actions centered">
-          <a
-            className="primary"
-            href={links.linkedin}
-            target="_blank"
-            rel="noreferrer"
+          {/* CONTACT */}
+          <SectionCard
+            id="contact"
+            number="07"
+            label="CONTACT"
+            title="Vamos construir algo?"
+            active={activeCard === "contact"}
+            onActivate={activateCard}
+            className="contact-card"
           >
-            Vamos conversar <Arrow />
-          </a>
+            <div className="contact-content">
+              <div>
+                <p className="contact-eyebrow">
+                  OPEN TO OPPORTUNITIES & COLLABORATIONS
+                </p>
 
-          <a
-            className="secondary"
-            href={links.github}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Ver projetos no GitHub <Arrow />
-          </a>
+                <h3>
+                  Tem um problema interessante?
+                  <span> Vamos conversar.</span>
+                </h3>
+
+                <p>
+                  Estou aberto a oportunidades em engenharia de software,
+                  backend, Java/Kotlin, sistemas distribuídos e projetos que
+                  envolvam IA.
+                </p>
+              </div>
+
+              <div className="contact-actions">
+                <a
+                  href={links.whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-button primary-button"
+                >
+                  WhatsApp
+                  <span>↗</span>
+                </a>
+
+                <a
+                  href={links.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-button"
+                >
+                  LinkedIn
+                  <span>↗</span>
+                </a>
+
+                <a
+                  href={links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-button"
+                >
+                  GitHub
+                  <span>↗</span>
+                </a>
+              </div>
+            </div>
+          </SectionCard>
         </div>
-      </section>
+      </main>
 
-      {/* FOOTER */}
-      <footer>
-        <span>© 2026 Matheus Carlos</span>
+      <footer className="footer">
+        <span>© {new Date().getFullYear()} Matheus Almeida</span>
 
-        <span>
-          Backend · Software Engineering · AI
-        </span>
-
-        <a
-          href={links.linkedin}
-          target="_blank"
-          rel="noreferrer"
-        >
-          LinkedIn <Arrow />
-        </a>
+        <span>Software Engineer • Brazil</span>
       </footer>
 
-      {/* PROJECT MODAL */}
       {activeProject && (
         <div
-          className="modal-backdrop"
+          className="modal-overlay"
           onClick={() => setActiveProject(null)}
         >
           <div
-            className="modal"
-            onClick={(e) => e.stopPropagation()}
+            className="project-modal"
+            onClick={(event) => event.stopPropagation()}
           >
             <button
               className="modal-close"
               onClick={() => setActiveProject(null)}
+              aria-label="Fechar projeto"
             >
               ×
             </button>
 
-            <span className="project-label">
-              {activeProject.label}
+            <span className="modal-category">
+              {activeProject.category}
             </span>
 
-            <h2>{activeProject.name}</h2>
+            <h2>{activeProject.title}</h2>
 
             <p>{activeProject.description}</p>
 
-            <div className="tags">
-              {activeProject.tags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
+            <div className="modal-stack">
+              <TagList items={activeProject.stack} />
             </div>
 
             <a
-              className="primary"
               href={activeProject.github}
               target="_blank"
               rel="noreferrer"
+              className="modal-github"
             >
-              Abrir repositório <Arrow />
+              Ver no GitHub
+              <span>↗</span>
             </a>
           </div>
         </div>
       )}
-    </main>
+    </>
   );
 }
 
