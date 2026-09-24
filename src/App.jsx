@@ -59,7 +59,13 @@ const projects = [
     label: "AI Engineering",
     description:
       "Estudo prático de Context Engineering com Claude Code: exploração de base de código, automação com Lighthouse CI, geração de componentes via Figma + MCP e configuração de agentes com CLAUDE.md e AGENTS.md.",
-    tags: ["Node.js", "NestJS", "Claude Code", "Context Engineering", "MCP"],
+    tags: [
+      "Node.js",
+      "NestJS",
+      "Claude Code",
+      "Context Engineering",
+      "MCP",
+    ],
     github: "https://github.com/Matheuszy/code-connect",
   },
 ];
@@ -67,11 +73,6 @@ const projects = [
 const certifications = [
   {
     title: "AWS Certified AI Practitioner",
-    issuer: "Amazon Web Services",
-    icon: "☁️",
-  },
-  {
-    title: "AWS Certified Cloud Practitioner",
     issuer: "Amazon Web Services",
     icon: "☁️",
   },
@@ -114,10 +115,69 @@ const descpaySkills = [
   "REST APIs",
   "PostgreSQL",
   "Payment Integrations",
-  "Asynchronous Processing",
+  "Async Processing",
   "Automated Testing",
   "Docker",
   "AWS",
+];
+
+const descpayActivities = [
+  {
+    number: "01",
+    title: "Backend & APIs",
+    description:
+      "Desenvolvimento e manutenção de funcionalidades backend e APIs REST, trabalhando principalmente com Java, Kotlin e Spring Boot.",
+    tags: ["Java", "Kotlin", "Spring Boot", "REST"],
+  },
+  {
+    number: "02",
+    title: "Regras de Negócio",
+    description:
+      "Implementação de novas funcionalidades e regras relacionadas a vendas, pagamentos e processos de gestão financeira.",
+    tags: ["Business Rules", "Payments", "Sales"],
+  },
+  {
+    number: "03",
+    title: "Integrações",
+    description:
+      "Integração com APIs e serviços externos, incluindo serviços de pagamento e parceiros envolvidos nos fluxos financeiros.",
+    tags: ["APIs", "Payments", "Integrations"],
+  },
+  {
+    number: "04",
+    title: "PostgreSQL",
+    description:
+      "Construção de queries, relacionamento entre dados, migrations e análise de questões relacionadas à performance do banco.",
+    tags: ["PostgreSQL", "SQL", "Migrations"],
+  },
+  {
+    number: "05",
+    title: "Processamento Assíncrono",
+    description:
+      "Desenvolvimento e manutenção de jobs e processos assíncronos para rotinas financeiras e fluxos de importação e exportação.",
+    tags: ["Async", "Jobs", "Financial Processing"],
+  },
+  {
+    number: "06",
+    title: "Testes & Qualidade",
+    description:
+      "Criação e manutenção de testes automatizados, além de investigação de bugs e análise de causa raiz para reduzir problemas no sistema.",
+    tags: ["Unit Tests", "Automation", "Root Cause"],
+  },
+  {
+    number: "07",
+    title: "Docker & AWS",
+    description:
+      "Uso de containers e serviços de cloud no desenvolvimento, execução e investigação de problemas relacionados aos ambientes.",
+    tags: ["Docker", "AWS", "Deployment"],
+  },
+  {
+    number: "08",
+    title: "Performance & Evolução",
+    description:
+      "Investigação de problemas de performance, organização do código e evolução gradual da arquitetura conforme as necessidades do produto.",
+    tags: ["Performance", "Architecture", "Code Quality"],
+  },
 ];
 
 function Arrow() {
@@ -128,13 +188,17 @@ function App() {
   const [activeProject, setActiveProject] = useState(null);
 
   const scrollTo = (id) =>
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+    });
 
   return (
     <main>
+      {/* NAV */}
       <nav className="nav">
         <button className="brand" onClick={() => scrollTo("home")}>
           <span className="brand-mark">M</span>
+
           <span>
             Matheus<span className="muted">.dev</span>
           </span>
@@ -142,12 +206,22 @@ function App() {
 
         <div className="nav-links">
           <button onClick={() => scrollTo("about")}>Sobre</button>
-          <button onClick={() => scrollTo("experience")}>Experiência</button>
-          <button onClick={() => scrollTo("projects")}>Projetos</button>
+
+          <button onClick={() => scrollTo("experience")}>
+            Experiência
+          </button>
+
+          <button onClick={() => scrollTo("projects")}>
+            Projetos
+          </button>
+
           <button onClick={() => scrollTo("certifications")}>
             Certificações
           </button>
-          <button onClick={() => scrollTo("stack")}>Stack</button>
+
+          <button onClick={() => scrollTo("stack")}>
+            Stack
+          </button>
 
           <a
             href={links.linkedin}
@@ -287,12 +361,14 @@ function App() {
         <div className="radar-card">
           <div>
             <span className="status">● MOMENTO ATUAL</span>
+
             <h3>Construindo o próximo nível.</h3>
           </div>
 
           <div className="radar-items">
             <div>
               <small>ATUANDO COMO</small>
+
               <strong>
                 Software Engineer Jr. — Backend
               </strong>
@@ -300,6 +376,7 @@ function App() {
 
             <div>
               <small>APROFUNDANDO</small>
+
               <strong>
                 Distributed Systems · Cloud · AI Engineering
               </strong>
@@ -307,6 +384,7 @@ function App() {
 
             <div>
               <small>CONSTRUINDO</small>
+
               <strong>
                 Sistemas robustos, escaláveis e orientados ao negócio
               </strong>
@@ -319,7 +397,10 @@ function App() {
       <section id="experience" className="section experience">
         <div className="section-heading">
           <div>
-            <div className="section-label">02 / EXPERIÊNCIA</div>
+            <div className="section-label">
+              02 / EXPERIÊNCIA
+            </div>
+
             <h2>
               Onde eu <em>construo.</em>
             </h2>
@@ -340,76 +421,66 @@ function App() {
               </p>
             </div>
 
-            <span className="experience-status">
-              BACKEND
-            </span>
+            <div className="experience-badge">
+              <span>BACKEND</span>
+              <span>PAYMENTS</span>
+              <span>FINANCIAL SYSTEMS</span>
+            </div>
           </div>
 
-          <p className="experience-description">
-            Atuação no desenvolvimento e evolução de sistemas backend
-            voltados às operações de vendas, pagamentos e gestão
-            financeira, com foco em regras de negócio, integração entre
-            sistemas, qualidade de software e evolução da arquitetura.
-          </p>
+          <div className="experience-intro">
+            <p>
+              Atuação no desenvolvimento e evolução de sistemas backend
+              voltados às operações de vendas, pagamentos e gestão
+              financeira, trabalhando com regras de negócio, integrações,
+              processamento de dados, qualidade de software e evolução
+              da arquitetura.
+            </p>
+          </div>
+
+          <div className="experience-divider">
+            <span>ATUAÇÃO</span>
+          </div>
 
           <div className="experience-grid">
-            <div>
-              <span className="experience-index">01</span>
+            {descpayActivities.map((activity) => (
+              <article
+                className="experience-activity"
+                key={activity.number}
+              >
+                <div className="activity-top">
+                  <span className="activity-number">
+                    {activity.number}
+                  </span>
 
-              <div>
-                <h4>Backend & APIs</h4>
-                <p>
-                  Desenvolvimento e manutenção de APIs REST,
-                  funcionalidades backend e regras de negócio utilizando
-                  Java, Kotlin e Spring Boot.
-                </p>
-              </div>
-            </div>
+                  <span className="activity-arrow">
+                    ↗
+                  </span>
+                </div>
 
-            <div>
-              <span className="experience-index">02</span>
+                <h4>{activity.title}</h4>
 
-              <div>
-                <h4>Payments & Integrations</h4>
-                <p>
-                  Integração com APIs e serviços externos, incluindo
-                  plataformas de pagamento e serviços relacionados às
-                  operações financeiras.
-                </p>
-              </div>
-            </div>
+                <p>{activity.description}</p>
 
-            <div>
-              <span className="experience-index">03</span>
-
-              <div>
-                <h4>Data & Processing</h4>
-                <p>
-                  Consultas, relacionamentos e migrations em PostgreSQL,
-                  além de jobs e processamento assíncrono para rotinas
-                  financeiras e fluxos de importação e exportação.
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <span className="experience-index">04</span>
-
-              <div>
-                <h4>Quality & Infrastructure</h4>
-                <p>
-                  Testes automatizados, Docker, AWS e investigação de
-                  problemas em ambientes de execução, além de melhorias
-                  de performance e organização do código.
-                </p>
-              </div>
-            </div>
+                <div className="activity-tags">
+                  {activity.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+              </article>
+            ))}
           </div>
 
-          <div className="experience-tags">
-            {descpaySkills.map((skill) => (
-              <span key={skill}>{skill}</span>
-            ))}
+          <div className="experience-stack">
+            <div className="experience-divider">
+              <span>TECNOLOGIAS & PRÁTICAS</span>
+            </div>
+
+            <div className="experience-stack-list">
+              {descpaySkills.map((skill) => (
+                <span key={skill}>{skill}</span>
+              ))}
+            </div>
           </div>
         </article>
       </section>
@@ -418,7 +489,9 @@ function App() {
       <section id="projects" className="section">
         <div className="section-heading">
           <div>
-            <div className="section-label">03 / PROJETOS</div>
+            <div className="section-label">
+              03 / PROJETOS
+            </div>
 
             <h2>
               Coisas que eu <em>construí.</em>
@@ -558,6 +631,7 @@ function App() {
 
               <div>
                 <h3>Arquitetura</h3>
+
                 <p>
                   Separação de responsabilidades, baixo acoplamento e
                   decisões que facilitam evolução.
@@ -570,6 +644,7 @@ function App() {
 
               <div>
                 <h3>Qualidade</h3>
+
                 <p>
                   Testes automatizados, Clean Code e CI para reduzir
                   regressões antes da entrega.
@@ -582,6 +657,7 @@ function App() {
 
               <div>
                 <h3>Observabilidade</h3>
+
                 <p>
                   Métricas, logs e tracing para entender o comportamento
                   real do sistema.
@@ -594,6 +670,7 @@ function App() {
 
               <div>
                 <h3>Negócio</h3>
+
                 <p>
                   Uma solução técnica só é boa quando resolve o problema
                   que realmente importa.
@@ -604,7 +681,7 @@ function App() {
         </div>
       </section>
 
-      {/* CONTACT */}
+      {/* CTA */}
       <section className="cta section">
         <div className="cta-glow" />
 
