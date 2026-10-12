@@ -7,6 +7,7 @@ import {
   certifications,
   stackGroups,
   descpayActivities,
+  mobileAppActivities,
   engineeringPrinciples,
 } from "./portfolioData";
 
@@ -290,6 +291,47 @@ export default function App() {
 
             <div className="activity-grid">
               {descpayActivities.map((a) => (
+                <div className="activity-card" key={a.number}>
+                  <span>{a.number}</span>
+                  <div>
+                    <h4>{a.title}</h4>
+                    <p>{a.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* segundo bloco — app mobile */}
+          <div className="experience-block hud-panel exp-block--secondary">
+            <div className="exp-header">
+              <div>
+                <p className="exp-company">PROJETO CONFIDENCIAL</p>
+                <h3>Fullstack Developer</h3>
+              </div>
+              <span className="exp-type">Mobile · Payments · Event Tech</span>
+            </div>
+
+            <p className="exp-description">
+              Desenvolvimento fullstack de um aplicativo mobile voltado para a
+              digitalização da experiência de consumo em eventos presenciais.
+              A proposta central é eliminar as barreiras físicas do processo de compra —
+              substituindo fichas, dinheiro em espécie e maquininhas por um fluxo
+              100% digital: o usuário deposita créditos diretamente no app e os
+              utiliza para adquirir produtos no evento, sem filas, sem troco e sem
+              depender de infraestrutura física de pagamento.
+            </p>
+
+            <p className="exp-description exp-description--impact">
+              O impacto esperado vai além da conveniência: ao centralizar as transações
+              digitalmente, o modelo permite rastrear comportamento de consumo em tempo real,
+              reduzir perdas operacionais e abrir novas possibilidades de receita para os
+              organizadores — desde controle de estoque dinâmico até estratégias de
+              precificação por demanda.
+            </p>
+
+            <div className="activity-grid">
+              {mobileAppActivities.map((a) => (
                 <div className="activity-card" key={a.number}>
                   <span>{a.number}</span>
                   <div>

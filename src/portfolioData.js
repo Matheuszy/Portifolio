@@ -151,6 +151,29 @@ export const stackGroups = [
   },
 ];
 
+export const mobileAppActivities = [
+  {
+    number: "01",
+    title: "Arquitetura Full-Stack Mobile",
+    text: "Desenvolvimento end-to-end de um aplicativo mobile, cobrindo desde a camada de API até a interface do usuário.",
+  },
+  {
+    number: "02",
+    title: "Integração de Pagamentos",
+    text: "Implementação do fluxo de depósito e conversão em créditos digitais, com rastreabilidade de transações em tempo real.",
+  },
+  {
+    number: "03",
+    title: "Experiência do Usuário",
+    text: "Fluxo de compra pensado para operar em ambientes de alta demanda — sem filas, sem fricção, direto no celular do usuário.",
+  },
+  {
+    number: "04",
+    title: "Escalabilidade de Eventos",
+    text: "Estrutura preparada para suportar picos de acesso simultâneo em eventos de grande porte, onde a disponibilidade é crítica.",
+  },
+];
+
 export const descpayActivities = [
   {
     number: "01",

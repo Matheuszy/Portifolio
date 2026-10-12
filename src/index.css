@@ -596,7 +596,20 @@ a         { text-decoration: none; }
   color: var(--muted);
   font-size: 14px;
   line-height: 1.85;
+  margin-bottom: 18px;
+}
+
+.exp-description--impact {
+  padding: 18px 20px;
+  border-left: 2px solid var(--red-dim);
+  background: var(--red-glow);
+  color: var(--text);
   margin-bottom: 30px;
+}
+
+.exp-block--secondary {
+  border-color: rgba(255, 31, 61, 0.22);
+  margin-top: 16px;
 }
 
 .activity-grid {
