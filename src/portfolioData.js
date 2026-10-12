@@ -125,13 +125,24 @@ export const stackGroups = [
     ],
   },
   {
-    title: "Data & Messaging",
-    items: ["PostgreSQL", "SQL", "Kafka", "RabbitMQ"],
+    title: "Databases",
+    items: [
+      "PostgreSQL",
+      "MySQL",
+      "MongoDB",
+      "DynamoDB",
+      "SQL",
+    ],
+  },
+  {
+    title: "Messaging & Streaming",
+    items: ["Kafka", "RabbitMQ"],
   },
   {
     title: "Cloud & DevOps",
     items: [
       "AWS",
+      "Oracle OCI",
       "Docker",
       "Kubernetes",
       "GitHub Actions",
@@ -143,9 +154,15 @@ export const stackGroups = [
   {
     title: "AI Engineering",
     items: [
+      "RAG",
+      "Embeddings",
       "AI Agents",
+      "Agent Orchestration",
+      "Harness Engineering",
       "Context Engineering",
       "MCP",
+      "Claude",
+      "Codex",
       "Machine Learning",
     ],
   },
