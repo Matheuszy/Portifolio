@@ -841,8 +841,110 @@ a         { text-decoration: none; }
 }
 
 /* =========================================================
-   CERTIFICATIONS & STACK
+   TECH STACK
 ========================================================= */
+
+.stack-section-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* painel de cada grupo */
+.stack-group-panel {
+  padding: 28px 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.stack-group-panel:hover {
+  border-color: var(--red-dim);
+  box-shadow: 0 0 40px rgba(255,31,61,0.06);
+}
+
+.stack-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stack-group-name {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.stack-group-count {
+  width: 22px; height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--red-dim);
+  color: var(--red);
+  font-family: var(--mono);
+  font-size: 8px;
+  clip-path: var(--clip-sm);
+}
+
+.stack-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stack-pill {
+  padding: 8px 13px;
+  border: 1px solid var(--line-bright);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  clip-path: var(--clip-sm);
+  background: rgba(255,255,255,0.03);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  cursor: default;
+}
+
+.stack-pill:hover {
+  border-color: var(--red-dim);
+  color: var(--white);
+  background: var(--red-glow);
+}
+
+/* destaque especial para AI Engineering */
+.stack-group-panel:last-child .stack-pill {
+  border-color: rgba(139, 92, 246, 0.25);
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.stack-group-panel:last-child .stack-pill:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(139, 92, 246, 0.12);
+  color: #e9d5ff;
+}
+
+.stack-group-panel:last-child .stack-group-name {
+  color: #a78bfa;
+}
+
+.stack-group-panel:last-child .stack-group-count {
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+}
+
+/* =========================================================
+   CERTIFICATIONS
+========================================================= */
+
+.certs-full-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
 
 .certs-stack-grid {
   display: grid;
@@ -932,9 +1034,7 @@ a         { text-decoration: none; }
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-}
-
-/* =========================================================
+}/* =========================================================
    ENGINEERING
 ========================================================= */
 
@@ -1183,6 +1283,8 @@ a         { text-decoration: none; }
 
   .hero-visual { display: none; }
   .about-stats { display: grid; grid-template-columns: repeat(3,1fr); }
+  .stack-section-grid { grid-template-columns: repeat(2, 1fr); }
+  .certs-full-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 700px) {
@@ -1218,7 +1320,9 @@ a         { text-decoration: none; }
   .hero-actions { flex-direction: column; align-items: stretch; }
 
   .activity-grid,
-  .projects-grid { grid-template-columns: 1fr; }
+  .projects-grid,
+  .stack-section-grid,
+  .certs-full-grid { grid-template-columns: 1fr; }
 
   .exp-header { flex-direction: column; gap: 6px; }
   .exp-type   { text-align: left; }

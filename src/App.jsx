@@ -133,8 +133,9 @@ export default function App() {
           <button data-index="02" onClick={() => scrollTo("experience")}>Experiência</button>
           <button data-index="03" onClick={() => scrollTo("freelance")}>Freelance</button>
           <button data-index="04" onClick={() => scrollTo("projects")}>Projetos</button>
-          <button data-index="05" onClick={() => scrollTo("certifications")}>Certificações</button>
-          <button data-index="06" onClick={() => scrollTo("contact")}>Contato</button>
+          <button data-index="05" onClick={() => scrollTo("stack")}>Stack</button>
+          <button data-index="06" onClick={() => scrollTo("certifications")}>Certificações</button>
+          <button data-index="07" onClick={() => scrollTo("contact")}>Contato</button>
         </div>
 
         <div className="nav-social">
@@ -390,49 +391,45 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── CERTIFICATIONS & STACK ───────────────────── */}
+        {/* ── TECH STACK ───────────────────────────────── */}
+        <section id="stack" className="section">
+          <SectionLabel index="05">TECH STACK</SectionLabel>
+
+          <div className="stack-section-grid">
+            {stackGroups.map((group) => (
+              <div className="stack-group-panel hud-panel" key={group.title}>
+                <div className="stack-group-header">
+                  <span className="stack-group-name">{group.title}</span>
+                  <span className="stack-group-count">{group.items.length}</span>
+                </div>
+                <div className="stack-pill-list">
+                  {group.items.map((item) => (
+                    <span className="stack-pill" key={item}>{item}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── CERTIFICATIONS ───────────────────────────── */}
         <section id="certifications" className="section">
-          <SectionLabel index="05">CERTIFICATIONS &amp; STACK</SectionLabel>
+          <SectionLabel index="06">CERTIFICATIONS &amp; FORMAÇÃO</SectionLabel>
 
-          <div className="certs-stack-grid">
-            <div>
-              <div className="subsection-title">
-                <span className="idx">01</span>
-                <span>Certificações &amp; Formação</span>
-              </div>
-
-              <div className="cert-list">
-                {certifications.map((cert) => (
-                  <CertCard key={cert.title} cert={cert} />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className="subsection-title">
-                <span className="idx">02</span>
-                <span>Tech Stack</span>
-              </div>
-
-              <div className="stack-groups">
-                {stackGroups.map((group) => (
-                  <div key={group.title}>
-                    <span className="stack-group-label">{group.title}</span>
-                    <TagList items={group.items} />
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="certs-full-grid">
+            {certifications.map((cert) => (
+              <CertCard key={cert.title} cert={cert} />
+            ))}
           </div>
         </section>
 
         {/* ── ENGINEERING ──────────────────────────────── */}
         <section id="engineering" className="section">
-          <SectionLabel index="06">ENGINEERING</SectionLabel>
+          <SectionLabel index="07">ENGINEERING</SectionLabel>
 
           <div className="engineering-grid">
             <div className="engineering-intro">
-              <span className="big-num">06</span>
+              <span className="big-num">07</span>
               <p>
                 Tecnologia é consequência. Antes dela vem o problema,
                 o contexto e as decisões que precisam ser tomadas.
@@ -456,7 +453,7 @@ export default function App() {
 
         {/* ── CONTACT ──────────────────────────────────── */}
         <section id="contact" className="section">
-          <SectionLabel index="07">CONTACT</SectionLabel>
+          <SectionLabel index="08">CONTACT</SectionLabel>
 
           <div className="contact-grid">
             <div>
