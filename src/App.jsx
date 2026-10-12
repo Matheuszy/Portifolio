@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   links,
   projects,
+  freelanceProjects,
   certifications,
   stackGroups,
   descpayActivities,
@@ -11,35 +12,18 @@ import {
 
 import "./index.css";
 
-function SectionCard({
-  id,
-  number,
-  label,
-  title,
-  children,
-  active,
-  onActivate,
-  className = "",
-}) {
+/* ─── small reusables ──────────────────────────────────── */
+
+function Arrow() {
+  return <span aria-hidden="true">↗</span>;
+}
+
+function SectionLabel({ index, children }) {
   return (
-    <article
-      id={id}
-      className={`stack-card ${active ? "active" : ""} ${className}`}
-      onClick={() => onActivate(id)}
-    >
-      <div className="card-glow" />
-
-      <header className="card-header">
-        <span className="card-number">{number}</span>
-        <span className="card-label">{label}</span>
-      </header>
-
-      <div className="card-title">
-        <h2>{title}</h2>
-      </div>
-
-      <div className="card-content">{children}</div>
-    </article>
+    <div className="section-label">
+      <span className="lbl-index">[{index}]</span>
+      {children}
+    </div>
   );
 }
 
@@ -47,9 +31,7 @@ function TagList({ items }) {
   return (
     <div className="tag-list">
       {items.map((item) => (
-        <span className="tag" key={item}>
-          {item}
-        </span>
+        <span className="tag" key={item}>{item}</span>
       ))}
     </div>
   );
@@ -59,22 +41,17 @@ function ProjectCard({ project, onOpen }) {
   return (
     <button
       className="project-card"
-      onClick={(event) => {
-        event.stopPropagation();
-        onOpen(project);
-      }}
+      onClick={() => onOpen(project)}
+      aria-label={`Ver detalhes de ${project.title}`}
     >
       <div className="project-top">
         <span className="project-number">{project.number}</span>
-
+        <span className="project-category">{project.category}</span>
         <span className="project-arrow">↗</span>
       </div>
 
       <div>
-        <span className="project-category">{project.category}</span>
-
         <h3>{project.title}</h3>
-
         <p>{project.description}</p>
       </div>
 
@@ -83,481 +60,410 @@ function ProjectCard({ project, onOpen }) {
   );
 }
 
-function CertificationCard({ certification }) {
+function FreelanceCard({ project, onOpen }) {
   return (
-    <div className={`cert-card ${certification.featured ? "featured" : ""}`}>
-      <div className="cert-icon">{certification.icon}</div>
+    <button
+      className="project-card freelance-card"
+      onClick={() => onOpen(project)}
+      aria-label={`Ver detalhes de ${project.title}`}
+    >
+      <div className="project-top">
+        <span className="project-number">{project.number}</span>
+        <span className="project-category">{project.category}</span>
+        <span className="project-arrow">↗</span>
+      </div>
 
       <div>
-        <span>{certification.issuer}</span>
-        <h3>{certification.title}</h3>
+        <div className="freelance-client-badge">
+          <span>● CLIENTE PRIVADO</span>
+        </div>
+        <h3>{project.title}</h3>
+        <p>{project.description}</p>
+      </div>
+
+      <TagList items={project.stack} />
+    </button>
+  );
+}
+
+function CertCard({ cert }) {
+  return (
+    <div className={`cert-card ${cert.featured ? "featured" : ""}`}>
+      <div className="cert-icon">{cert.icon}</div>
+      <div>
+        <span className="cert-issuer">{cert.issuer}</span>
+        <h3>{cert.title}</h3>
       </div>
     </div>
   );
 }
 
-function App() {
-  const [activeCard, setActiveCard] = useState("intro");
-  const [activeProject, setActiveProject] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+/* ─── App ──────────────────────────────────────────────── */
 
-  const activateCard = (id) => {
-    setActiveCard(id);
-  };
+export default function App() {
+  const [activeProject, setActiveProject] = useState(null);
+  const [menuOpen, setMenuOpen]           = useState(false);
 
   const scrollTo = (id) => {
     setMenuOpen(false);
-
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-    setActiveCard(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  /* lock scroll when modal is open */
   useEffect(() => {
     if (!activeProject) return;
-
     document.body.style.overflow = "hidden";
-
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setActiveProject(null);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    const onKey = (e) => { if (e.key === "Escape") setActiveProject(null); };
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
   }, [activeProject]);
 
   return (
     <>
+      {/* ── NAV ──────────────────────────────────────── */}
       <nav className="navbar">
-        <button
-          className="brand"
-          onClick={() => scrollTo("intro")}
-          aria-label="Voltar ao início"
-        >
+        <button className="brand" onClick={() => scrollTo("hero")} aria-label="Início">
           <span className="brand-mark">M</span>
           <span>MATHEUS.DEV</span>
         </button>
 
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-          <button onClick={() => scrollTo("about")}>Sobre</button>
-          <button onClick={() => scrollTo("experience")}>Experiência</button>
-          <button onClick={() => scrollTo("projects")}>Projetos</button>
-          <button onClick={() => scrollTo("certifications")}>
-            Certificações
-          </button>
-          <button onClick={() => scrollTo("contact")}>Contato</button>
+          <button data-index="01" onClick={() => scrollTo("about")}>Sobre</button>
+          <button data-index="02" onClick={() => scrollTo("experience")}>Experiência</button>
+          <button data-index="03" onClick={() => scrollTo("freelance")}>Freelance</button>
+          <button data-index="04" onClick={() => scrollTo("projects")}>Projetos</button>
+          <button data-index="05" onClick={() => scrollTo("certifications")}>Certificações</button>
+          <button data-index="06" onClick={() => scrollTo("contact")}>Contato</button>
         </div>
 
         <div className="nav-social">
-          <a
-            href={links.linkedin}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="LinkedIn"
-          >
-            in
-          </a>
-
-          <a
-            href={links.github}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub"
-          >
-            GH
-          </a>
+          <a href={links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">in</a>
+          <a href={links.github}   target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
         </div>
 
         <button
           className="menu-button"
-          onClick={() => setMenuOpen((value) => !value)}
-          aria-label="Abrir menu"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="Menu"
           aria-expanded={menuOpen}
         >
-          <span />
-          <span />
-          <span />
+          <span /><span /><span />
         </button>
       </nav>
 
       <main className="portfolio">
-        <div className="stack-container">
-          {/* INTRO */}
-          <SectionCard
-            id="intro"
-            number="01"
-            label="INTRO"
-            title="Software Engineer"
-            active={activeCard === "intro"}
-            onActivate={activateCard}
-            className="hero-card"
-          >
-            <div className="hero-grid">
-              <div className="hero-copy">
-                <p className="eyebrow">
-                  BACKEND • DISTRIBUTED SYSTEMS • AI ENGINEERING
-                </p>
 
-                <h1>
-                  Eu transformo
-                  <span> problemas complexos</span> em software.
-                </h1>
+        {/* ── HERO ─────────────────────────────────────── */}
+        <section id="hero" className="hero-section">
+          <div className="hero-inner">
+            <div className="hero-copy">
+              <p className="hero-eyebrow">BACKEND · DISTRIBUTED SYSTEMS · AI ENGINEERING</p>
 
-                <p className="hero-description">
-                  Software Engineer focado em backend, Java, Kotlin e Python,
-                  construindo APIs, sistemas distribuídos, integrações
-                  financeiras e soluções com IA.
-                </p>
+              <h1>
+                Eu transformo<br />
+                <span className="accent">problemas complexos</span><br />
+                em software.
+              </h1>
 
-                <div className="hero-actions">
-                  <button
-                    className="primary-button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      scrollTo("projects");
-                    }}
-                  >
-                    Ver projetos
-                    <span>↗</span>
-                  </button>
+              <p className="hero-description">
+                Software Engineer focado em backend, Java, Kotlin e Python —
+                construindo APIs, sistemas distribuídos, integrações financeiras
+                e soluções com IA.
+              </p>
 
-                  <a
-                    className="secondary-button"
-                    href={links.whatsapp}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    Falar comigo
-                  </a>
-                </div>
-              </div>
-
-              <div className="hero-visual">
-                <div className="orbital orbital-one" />
-                <div className="orbital orbital-two" />
-                <div className="orbital orbital-three" />
-
-                <div className="hero-core">
-                  <span>JAVA</span>
-                  <strong>+</strong>
-                  <span>AI</span>
-                </div>
-              </div>
-            </div>
-          </SectionCard>
-
-          {/* ABOUT */}
-          <SectionCard
-            id="about"
-            number="02"
-            label="ABOUT"
-            title="Sobre mim"
-            active={activeCard === "about"}
-            onActivate={activateCard}
-          >
-            <div className="about-grid">
-              <div className="about-main">
-                <p className="section-intro">
-                  Minha trajetória começou em uma área de negócios, onde tive
-                  contato direto com processos, operações internacionais e
-                  automação. Com o tempo, passei a transformar esse
-                  conhecimento em soluções de software.
-                </p>
-
-                <p>
-                  Hoje meu foco está no desenvolvimento backend e na construção
-                  de sistemas que precisam ser organizados, escaláveis e fáceis
-                  de evoluir.
-                </p>
-
-                <p>
-                  Trabalho principalmente com Java, Kotlin, Spring Boot e
-                  Python, enquanto exploro arquitetura distribuída, cloud,
-                  DevOps e engenharia de IA.
-                </p>
-              </div>
-
-              <div className="about-side">
-                <div className="info-block">
-                  <span>FOCO ATUAL</span>
-                  <strong>Backend Engineering</strong>
-                </div>
-
-                <div className="info-block">
-                  <span>ECOSSISTEMA</span>
-                  <strong>Java • Kotlin • Python</strong>
-                </div>
-
-                <div className="info-block">
-                  <span>DIFERENCIAL</span>
-                  <strong>Software + AI</strong>
-                </div>
+              <div className="hero-actions">
+                <button className="btn-primary" onClick={() => scrollTo("projects")}>
+                  Ver projetos <Arrow />
+                </button>
+                <a className="btn-secondary" href={links.whatsapp} target="_blank" rel="noreferrer">
+                  Falar comigo <Arrow />
+                </a>
               </div>
             </div>
 
-            <div className="status-line">
-              <span className="status-dot" />
-              <span>Construindo. Aprendendo. Evoluindo.</span>
-            </div>
-          </SectionCard>
+            {/* HUD terminal — visual side */}
+            <div className="hero-visual">
+              <div className="hud-panel hud-terminal">
+                <div className="terminal-bar">
+                  <span className="dot dot-red" />
+                  <span className="dot dot-dim" />
+                  <span className="dot dot-dim" />
+                  <span>matheus@dev ~ </span>
+                </div>
 
-          {/* EXPERIENCE */}
-          <SectionCard
-            id="experience"
-            number="03"
-            label="EXPERIENCE"
-            title="Experiência"
-            active={activeCard === "experience"}
-            onActivate={activateCard}
-          >
-            <div className="experience-heading">
+                <div className="terminal-line">
+                  <span className="prompt">›</span>
+                  <span>role</span>
+                  <span className="val">Software Engineer</span>
+                </div>
+                <div className="terminal-line">
+                  <span className="prompt">›</span>
+                  <span>stack</span>
+                  <span className="val">Java · Kotlin · Python</span>
+                </div>
+                <div className="terminal-line">
+                  <span className="prompt">›</span>
+                  <span>focus</span>
+                  <span className="val">Backend · Cloud · AI</span>
+                </div>
+                <div className="terminal-line">
+                  <span className="prompt">›</span>
+                  <span>status</span>
+                  <span className="val ok">● open to work</span>
+                </div>
+                <div className="terminal-line">
+                  <span className="prompt">›</span>
+                  <span className="val"><span className="terminal-cursor" /></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── ABOUT ────────────────────────────────────── */}
+        <section id="about" className="section">
+          <SectionLabel index="01">ABOUT</SectionLabel>
+
+          <div className="about-grid">
+            <div className="about-main">
+              <p className="intro-p">
+                Minha trajetória começou em uma área de negócios, onde tive
+                contato direto com processos, operações internacionais e
+                automação. Com o tempo, passei a transformar esse
+                conhecimento em soluções de software.
+              </p>
+              <p>
+                Hoje meu foco está no desenvolvimento backend e na construção
+                de sistemas organizados, escaláveis e fáceis de evoluir.
+              </p>
+              <p>
+                Trabalho principalmente com Java, Kotlin, Spring Boot e Python,
+                enquanto exploro arquitetura distribuída, cloud, DevOps e
+                engenharia de IA.
+              </p>
+
+              <div className="status-line">
+                <span className="status-dot" />
+                <span>Construindo. Aprendendo. Evoluindo.</span>
+              </div>
+            </div>
+
+            <div className="about-stats">
+              <div className="stat-row">
+                <span>FOCO ATUAL</span>
+                <strong>Backend Engineering</strong>
+              </div>
+              <div className="stat-row">
+                <span>ECOSSISTEMA</span>
+                <strong>Java · Kotlin · Python</strong>
+              </div>
+              <div className="stat-row">
+                <span>DIFERENCIAL</span>
+                <strong>Software + AI</strong>
+              </div>
+              <div className="stat-row">
+                <span>FORMAÇÃO</span>
+                <strong>Eng. de Software — Alura</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── EXPERIENCE ───────────────────────────────── */}
+        <section id="experience" className="section">
+          <SectionLabel index="02">EXPERIENCE</SectionLabel>
+
+          <div className="experience-block hud-panel">
+            <div className="exp-header">
               <div>
-                <span className="company-label">DESCPAY</span>
+                <p className="exp-company">DESCPAY</p>
                 <h3>Software Engineer Jr.</h3>
               </div>
-
-              <span className="experience-type">
-                Backend • Payments • Financial Systems
-              </span>
+              <span className="exp-type">Backend · Payments · Financial Systems</span>
             </div>
 
-            <p className="experience-description">
-              Desenvolvimento de soluções backend para o ecossistema de
-              pagamentos, trabalhando com APIs, regras financeiras, integrações
-              externas, processamento assíncrono e evolução de sistemas.
+            <p className="exp-description">
+              Desenvolvimento de soluções backend para o ecossistema de pagamentos,
+              trabalhando com APIs, regras financeiras, integrações externas,
+              processamento assíncrono e evolução contínua dos sistemas.
             </p>
 
             <div className="activity-grid">
-              {descpayActivities.map((activity) => (
-                <div className="activity-card" key={activity.number}>
-                  <span>{activity.number}</span>
-
+              {descpayActivities.map((a) => (
+                <div className="activity-card" key={a.number}>
+                  <span>{a.number}</span>
                   <div>
-                    <h4>{activity.title}</h4>
-                    <p>{activity.text}</p>
+                    <h4>{a.title}</h4>
+                    <p>{a.text}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </SectionCard>
+          </div>
+        </section>
 
-          {/* PROJECTS */}
-          <SectionCard
-            id="projects"
-            number="04"
-            label="PROJECTS"
-            title="Projetos"
-            active={activeCard === "projects"}
-            onActivate={activateCard}
-            className="projects-section"
-          >
-            <div className="projects-intro">
-              <p>
-                Projetos que representam meu processo de aprendizado,
-                experimentação e construção de software.
-              </p>
+        {/* ── FREELANCE ────────────────────────────────── */}
+        <section id="freelance" className="section">
+          <SectionLabel index="03">FREELANCE</SectionLabel>
 
-              <span>{projects.length} projetos selecionados</span>
-            </div>
+          <div className="freelance-intro">
+            <p>
+              Projetos desenvolvidos para clientes — soluções com impacto
+              direto no negócio, construídas com foco em qualidade e escalabilidade.
+            </p>
+            <span className="projects-count">{freelanceProjects.length} projeto{freelanceProjects.length !== 1 ? "s" : ""}</span>
+          </div>
 
-            <div className="projects-grid">
-              {projects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  onOpen={setActiveProject}
-                />
-              ))}
-            </div>
-          </SectionCard>
+          <div className="projects-grid">
+            {freelanceProjects.map((project) => (
+              <FreelanceCard key={project.id} project={project} onOpen={setActiveProject} />
+            ))}
 
-          {/* CERTIFICATIONS */}
-          <SectionCard
-            id="certifications"
-            number="05"
-            label="CERTIFICATIONS"
-            title="Certificações & Stack"
-            active={activeCard === "certifications"}
-            onActivate={activateCard}
-          >
-            <div className="certifications-grid">
-              <div className="certifications-column">
-                <div className="subsection-heading">
-                  <span>01</span>
-                  <h3>Certificações</h3>
-                </div>
-
-                <div className="cert-list">
-                  {certifications.map((certification) => (
-                    <CertificationCard
-                      key={certification.title}
-                      certification={certification}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="stack-column">
-                <div className="subsection-heading">
-                  <span>02</span>
-                  <h3>Tech Stack</h3>
-                </div>
-
-                <div className="stack-groups">
-                  {stackGroups.map((group) => (
-                    <div className="stack-group" key={group.title}>
-                      <span>{group.title}</span>
-
-                      <TagList items={group.items} />
-                    </div>
-                  ))}
-                </div>
+            {/* placeholder para próximos projetos */}
+            <div className="project-card project-card--placeholder">
+              <div className="placeholder-inner">
+                <span className="placeholder-icon">+</span>
+                <p>Mais projetos em breve</p>
               </div>
             </div>
-          </SectionCard>
+          </div>
+        </section>
 
-          {/* ENGINEERING */}
-          <SectionCard
-            id="engineering"
-            number="06"
-            label="ENGINEERING"
-            title="Como eu penso"
-            active={activeCard === "engineering"}
-            onActivate={activateCard}
-          >
-            <div className="engineering-grid">
-              <div className="engineering-intro">
-                <span className="big-number">06</span>
+        {/* ── PROJECTS ─────────────────────────────────── */}
+        <section id="projects" className="section">
+          <SectionLabel index="04">PROJETOS PESSOAIS</SectionLabel>
 
-                <p>
-                  Tecnologia é consequência. Antes dela vem o problema, o
-                  contexto e as decisões que precisam ser tomadas.
-                </p>
+          <div className="projects-header">
+            <p>
+              Projetos que representam meu processo de aprendizado,
+              experimentação e construção de software.
+            </p>
+            <span className="projects-count">{projects.length} projetos selecionados</span>
+          </div>
 
-                <p>
-                  Meu objetivo é construir soluções que façam sentido para o
-                  negócio e que continuem fazendo sentido quando o sistema
-                  crescer.
-                </p>
+          <div className="projects-grid">
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} onOpen={setActiveProject} />
+            ))}
+          </div>
+        </section>
+
+        {/* ── CERTIFICATIONS & STACK ───────────────────── */}
+        <section id="certifications" className="section">
+          <SectionLabel index="05">CERTIFICATIONS &amp; STACK</SectionLabel>
+
+          <div className="certs-stack-grid">
+            <div>
+              <div className="subsection-title">
+                <span className="idx">01</span>
+                <span>Certificações &amp; Formação</span>
               </div>
 
-              <div className="principles">
-                {engineeringPrinciples.map((principle, index) => (
-                  <div className="principle" key={principle}>
-                    <span>
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+              <div className="cert-list">
+                {certifications.map((cert) => (
+                  <CertCard key={cert.title} cert={cert} />
+                ))}
+              </div>
+            </div>
 
-                    <p>{principle}</p>
+            <div>
+              <div className="subsection-title">
+                <span className="idx">02</span>
+                <span>Tech Stack</span>
+              </div>
+
+              <div className="stack-groups">
+                {stackGroups.map((group) => (
+                  <div key={group.title}>
+                    <span className="stack-group-label">{group.title}</span>
+                    <TagList items={group.items} />
                   </div>
                 ))}
               </div>
             </div>
-          </SectionCard>
+          </div>
+        </section>
 
-          {/* CONTACT */}
-          <SectionCard
-            id="contact"
-            number="07"
-            label="CONTACT"
-            title="Vamos construir algo?"
-            active={activeCard === "contact"}
-            onActivate={activateCard}
-            className="contact-card"
-          >
-            <div className="contact-content">
-              <div>
-                <p className="contact-eyebrow">
-                  OPEN TO OPPORTUNITIES & COLLABORATIONS
-                </p>
+        {/* ── ENGINEERING ──────────────────────────────── */}
+        <section id="engineering" className="section">
+          <SectionLabel index="06">ENGINEERING</SectionLabel>
 
-                <h3>
-                  Tem um problema interessante?
-                  <span> Vamos conversar.</span>
-                </h3>
-
-                <p>
-                  Estou aberto a oportunidades em engenharia de software,
-                  backend, Java/Kotlin, sistemas distribuídos e projetos que
-                  envolvam IA.
-                </p>
-              </div>
-
-              <div className="contact-actions">
-                <a
-                  href={links.whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="contact-button primary-button"
-                >
-                  WhatsApp
-                  <span>↗</span>
-                </a>
-
-                <a
-                  href={links.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="contact-button"
-                >
-                  LinkedIn
-                  <span>↗</span>
-                </a>
-
-                <a
-                  href={links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="contact-button"
-                >
-                  GitHub
-                  <span>↗</span>
-                </a>
-              </div>
+          <div className="engineering-grid">
+            <div className="engineering-intro">
+              <span className="big-num">06</span>
+              <p>
+                Tecnologia é consequência. Antes dela vem o problema,
+                o contexto e as decisões que precisam ser tomadas.
+              </p>
+              <p>
+                Meu objetivo é construir soluções que façam sentido para o
+                negócio e que continuem fazendo sentido quando o sistema crescer.
+              </p>
             </div>
-          </SectionCard>
-        </div>
+
+            <div className="principles-list">
+              {engineeringPrinciples.map((p, i) => (
+                <div className="principle" key={p}>
+                  <span className="p-num">{String(i + 1).padStart(2, "0")}</span>
+                  <p>{p}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── CONTACT ──────────────────────────────────── */}
+        <section id="contact" className="section">
+          <SectionLabel index="07">CONTACT</SectionLabel>
+
+          <div className="contact-grid">
+            <div>
+              <p className="contact-eyebrow">OPEN TO OPPORTUNITIES &amp; COLLABORATIONS</p>
+              <h2>
+                Tem um problema<br />
+                interessante?<br />
+                <span className="accent">Vamos conversar.</span>
+              </h2>
+              <p className="contact-sub">
+                Estou aberto a oportunidades em engenharia de software,
+                backend, Java/Kotlin, sistemas distribuídos e projetos que
+                envolvam IA.
+              </p>
+            </div>
+
+            <div className="contact-actions">
+              <a href={links.whatsapp} target="_blank" rel="noreferrer" className="contact-link primary">
+                WhatsApp <Arrow />
+              </a>
+              <a href={links.linkedin} target="_blank" rel="noreferrer" className="contact-link">
+                LinkedIn <Arrow />
+              </a>
+              <a href={links.github} target="_blank" rel="noreferrer" className="contact-link">
+                GitHub <Arrow />
+              </a>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <footer className="footer">
         <span>© {new Date().getFullYear()} Matheus Almeida</span>
-
-        <span>Software Engineer • Brazil</span>
+        <span>Software Engineer · Brazil</span>
       </footer>
 
+      {/* ── MODAL ──────────────────────────────────────── */}
       {activeProject && (
-        <div
-          className="modal-overlay"
-          onClick={() => setActiveProject(null)}
-        >
-          <div
-            className="project-modal"
-            onClick={(event) => event.stopPropagation()}
-          >
+        <div className="modal-overlay" onClick={() => setActiveProject(null)}>
+          <div className="project-modal" onClick={(e) => e.stopPropagation()}>
             <button
               className="modal-close"
               onClick={() => setActiveProject(null)}
-              aria-label="Fechar projeto"
-            >
-              ×
-            </button>
+              aria-label="Fechar"
+            >×</button>
 
-            <span className="modal-category">
-              {activeProject.category}
-            </span>
-
+            <span className="modal-category">{activeProject.category}</span>
             <h2>{activeProject.title}</h2>
-
             <p>{activeProject.description}</p>
 
             <div className="modal-stack">
@@ -570,8 +476,7 @@ function App() {
               rel="noreferrer"
               className="modal-github"
             >
-              Ver no GitHub
-              <span>↗</span>
+              Ver no GitHub <Arrow />
             </a>
           </div>
         </div>
@@ -579,5 +484,3 @@ function App() {
     </>
   );
 }
-
-export default App;

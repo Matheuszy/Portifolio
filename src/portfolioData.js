@@ -4,6 +4,20 @@ export const links = {
   whatsapp: "https://wa.me/5513991790394",
 };
 
+export const freelanceProjects = [
+  {
+    id: 1,
+    number: "01",
+    title: "Multi-Tenant Inventory",
+    client: "Cliente Privado",
+    category: "SaaS · Estoque & PDV",
+    description:
+      "SaaS de gestão de estoque e ponto de venda com arquitetura multi-tenant — múltiplos clientes isolados dentro de uma única plataforma, com controle de acesso por organização e estrutura preparada para escalar.",
+    stack: ["Java", "Spring Boot", "Multi-tenancy", "PostgreSQL"],
+    github: "https://github.com/Codex-System/Sistema-de-estoque",
+  },
+];
+
 export const projects = [
   {
     id: 1,
@@ -18,16 +32,6 @@ export const projects = [
   {
     id: 2,
     number: "02",
-    title: "Multi-Tenant Inventory",
-    category: "Estoque & PDV",
-    description:
-      "Sistema de estoque desenvolvido com arquitetura multi-tenant, controle de acesso e estrutura preparada para diferentes organizações.",
-    stack: ["Java", "Spring Boot", "Multi-tenancy", "PostgreSQL"],
-    github: "https://github.com/Codex-System/Sistema-de-estoque",
-  },
-  {
-    id: 3,
-    number: "03",
     title: "Sentinel",
     category: "Fraud Detection",
     description:
@@ -36,8 +40,8 @@ export const projects = [
     github: "https://github.com/Matheuszy/Projeto-sentinel",
   },
   {
-    id: 4,
-    number: "04",
+    id: 3,
+    number: "03",
     title: "Smart Product Recommender",
     category: "AI Engine",
     description:
@@ -46,8 +50,8 @@ export const projects = [
     github: "https://github.com/Matheuszy/srmart-recommender",
   },
   {
-    id: 5,
-    number: "05",
+    id: 4,
+    number: "04",
     title: "Java Microservices",
     category: "Distributed Systems",
     description:
@@ -56,8 +60,8 @@ export const projects = [
     github: "https://github.com/Matheuszy/microsservi-os-java",
   },
   {
-    id: 6,
-    number: "06",
+    id: 5,
+    number: "05",
     title: "Credit Prediction",
     category: "Analytics",
     description:
@@ -66,8 +70,8 @@ export const projects = [
     github: "https://github.com/Matheuszy/projeto-ML-previsao-dados-credito",
   },
   {
-    id: 7,
-    number: "07",
+    id: 6,
+    number: "06",
     title: "Code Connect",
     category: "AI Engineering",
     description:
