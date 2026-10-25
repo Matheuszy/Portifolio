@@ -11,8 +11,6 @@ import {
   engineeringPrinciples,
 } from "./portfolioData";
 
-import "./index.css";
-
 /* ─── small reusables ──────────────────────────────────── */
 
 function Arrow() {
@@ -110,12 +108,22 @@ export default function App() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  /* close mobile menu with Esc */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   /* lock scroll when modal is open */
   useEffect(() => {
     if (!activeProject) return;
     document.body.style.overflow = "hidden";
     const onKey = (e) => { if (e.key === "Escape") setActiveProject(null); };
     window.addEventListener("keydown", onKey);
+    const closeBtn = document.querySelector(".modal-close");
+    closeBtn?.focus();
     return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
   }, [activeProject]);
 
@@ -135,7 +143,8 @@ export default function App() {
           <button data-index="04" onClick={() => scrollTo("projects")}>Projetos</button>
           <button data-index="05" onClick={() => scrollTo("stack")}>Stack</button>
           <button data-index="06" onClick={() => scrollTo("certifications")}>Certificações</button>
-          <button data-index="07" onClick={() => scrollTo("contact")}>Contato</button>
+          <button data-index="07" onClick={() => scrollTo("engineering")}>Engenharia</button>
+          <button data-index="08" onClick={() => scrollTo("contact")}>Contato</button>
         </div>
 
         <div className="nav-social">
@@ -381,7 +390,7 @@ export default function App() {
               Projetos que representam meu processo de aprendizado,
               experimentação e construção de software.
             </p>
-            <span className="projects-count">{projects.length} projetos selecionados</span>
+            <span className="projects-count">{projects.length} projeto{projects.length !== 1 ? "s" : ""} selecionado{projects.length !== 1 ? "s" : ""}</span>
           </div>
 
           <div className="projects-grid">
@@ -487,14 +496,14 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        <span>© {new Date().getFullYear()} Matheus Almeida</span>
+        <span>© {new Date().getFullYear()} Matheus Carlos</span>
         <span>Software Engineer · Brazil</span>
       </footer>
 
       {/* ── MODAL ──────────────────────────────────────── */}
       {activeProject && (
         <div className="modal-overlay" onClick={() => setActiveProject(null)}>
-          <div className="project-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="project-modal" role="dialog" aria-modal="true" aria-label={activeProject.title} onClick={(e) => e.stopPropagation()}>
             <button
               className="modal-close"
               onClick={() => setActiveProject(null)}

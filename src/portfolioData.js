@@ -16,27 +16,18 @@ export const freelanceProjects = [
     stack: ["Java", "Spring Boot", "Multi-tenancy", "PostgreSQL"],
     github: "https://github.com/Codex-System/Sistema-de-estoque",
   },
-  
-{
-  id: 2,
-  number: "02",
-  title: "BI & Analytics Platform",
-  client: "Cliente Privado",
-  category: "BI · Analytics · ETL",
-  description:
-    "Plataforma de Business Intelligence desenvolvida para automatizar a consolidação e análise de dados operacionais. Pipeline ETL para processamento de planilhas Excel e dashboard interativo com módulos financeiro, obras e RH, KPIs, filtros cruzados e visualizações analíticas. Dados reais e informações confidenciais da empresa não são disponibilizados publicamente.",
-  stack: [
-    "Python",
-    "Pandas",
-    "Dash",
-    "Plotly",
-    "MongoDB",
-    "Flask",
-    "Pytest",
-  ],
-  github: "https://github.com/Matheuszy/dashboard-alfa-construtora",
-},
 
+  {
+    id: 2,
+    number: "02",
+    title: "BI & Analytics Platform",
+    client: "Cliente Privado",
+    category: "BI · Analytics · ETL",
+    description:
+      "Plataforma de BI que automatiza a consolidação de dados operacionais: pipeline ETL de planilhas Excel e dashboard interativo com módulos financeiro, obras e RH, KPIs e filtros cruzados. Dados reais são confidenciais.",
+    stack: ["Python", "Pandas", "Dash", "Plotly", "MongoDB", "Flask", "Pytest"],
+    github: "https://github.com/Matheuszy/dashboard-alfa-construtora",
+  },
 ];
 
 export const projects = [

@@ -15,8 +15,17 @@ npm install
 npm run dev
 ```
 
+## Estrutura
+
+- `src/portfolioData.js`: todo o conteúdo (projetos, stack, certificações).
+- `src/App.jsx`: seções e componentes.
+- `src/index.css`: estilos globais.
+
 ## Deploy
 
 ```bash
-npm run build
+npm run build   # gera dist/
+npm run preview # testa o build localmente
 ```
+
+Publique o conteúdo de `dist/` em qualquer host estático.
