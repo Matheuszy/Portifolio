@@ -15,6 +15,8 @@ export const freelanceProjects = [
       "SaaS de gestão de estoque e ponto de venda com arquitetura multi-tenant — múltiplos clientes isolados dentro de uma única plataforma, com controle de acesso por organização e estrutura preparada para escalar.",
     stack: ["Java", "Spring Boot", "Multi-tenancy", "PostgreSQL"],
     github: "https://github.com/Codex-System/Sistema-de-estoque",
+    layers: ["API", "DB"],
+    flow: ["Client", "Spring Boot API", "PostgreSQL"],
   },
 
   {
@@ -27,6 +29,8 @@ export const freelanceProjects = [
       "Plataforma de BI que automatiza a consolidação de dados operacionais: pipeline ETL de planilhas Excel e dashboard interativo com módulos financeiro, obras e RH, KPIs e filtros cruzados. Dados reais são confidenciais.",
     stack: ["Python", "Pandas", "Dash", "Plotly", "MongoDB", "Flask", "Pytest"],
     github: "https://github.com/Matheuszy/dashboard-alfa-construtora",
+    layers: ["ETL", "DB", "UI"],
+    flow: ["Excel", "ETL · Pandas", "MongoDB", "Dash UI"],
   },
 ];
 
@@ -40,6 +44,8 @@ export const projects = [
       "API de gerenciamento desenvolvida com foco em arquitetura de software, organização de domínio e boas práticas de desenvolvimento backend.",
     stack: ["Java 17", "Spring Boot", "JPA", "PostgreSQL", "JUnit"],
     github: "https://github.com/Matheuszy/Basilico",
+    layers: ["API", "DB"],
+    flow: ["Client", "Spring Boot API", "PostgreSQL"],
   },
   {
     id: 2,
@@ -50,6 +56,9 @@ export const projects = [
       "Projeto de detecção de possíveis fraudes utilizando análise de dados e modelos de Machine Learning.",
     stack: ["Python", "Machine Learning", "Data Analysis"],
     github: "https://github.com/Matheuszy/Projeto-sentinel",
+    layers: ["ML", "DATA"],
+    flow: ["Dados", "Features", "Modelo ML", "Score de fraude"],
+    ai: true,
   },
   {
     id: 3,
@@ -60,6 +69,9 @@ export const projects = [
       "Engine de recomendação de produtos combinando diferentes estratégias algorítmicas para geração de recomendações.",
     stack: ["Python", "FastAPI", "Markov", "Bayes", "A*"],
     github: "https://github.com/Matheuszy/srmart-recommender",
+    layers: ["API", "ML"],
+    flow: ["Client", "FastAPI", "Markov · Bayes · A*", "Recomendações"],
+    ai: true,
   },
   {
     id: 4,
@@ -70,6 +82,8 @@ export const projects = [
       "Estudos e implementação de uma arquitetura baseada em microsserviços e conceitos de sistemas distribuídos.",
     stack: ["Java", "Microservices", "Distributed Systems"],
     github: "https://github.com/Matheuszy/microsservi-os-java",
+    layers: ["API", "DIST"],
+    flow: ["Client", "Microsserviços Java"],
   },
   {
     id: 5,
@@ -80,6 +94,9 @@ export const projects = [
       "Projeto de análise e previsão de dados de crédito utilizando técnicas de Machine Learning e SQL.",
     stack: ["Python", "SQL", "Machine Learning"],
     github: "https://github.com/Matheuszy/projeto-ML-previsao-dados-credito",
+    layers: ["ML", "DB"],
+    flow: ["Dados (SQL)", "Modelo ML", "Previsão"],
+    ai: true,
   },
   {
     id: 6,
@@ -96,6 +113,9 @@ export const projects = [
       "MCP",
     ],
     github: "https://github.com/Matheuszy/code-connect",
+    layers: ["API", "AI"],
+    flow: ["Dev", "NestJS API", "Agente · MCP"],
+    ai: true,
   },
 ];
 
@@ -126,33 +146,22 @@ export const certifications = [
 
 export const stackGroups = [
   {
+    title: "Frontend",
+    items: ["React", "Vite", "JavaScript", "HTML & CSS", "Dash / Plotly"],
+  },
+  {
     title: "Backend",
-    items: [
-      "Java",
-      "Kotlin",
-      "Spring Boot",
-      "Python",
-      "FastAPI",
-      "REST APIs",
-    ],
+    items: ["Java", "Kotlin", "Spring Boot", "Python", "FastAPI", "REST APIs"],
   },
   {
     title: "Databases",
-    items: [
-      "PostgreSQL",
-      "MySQL",
-      "MongoDB",
-      "DynamoDB",
-      "SQL",
-    ],
+    items: ["PostgreSQL", "MySQL", "MongoDB", "DynamoDB", "SQL"],
   },
   {
-    title: "Messaging & Streaming",
-    items: ["Kafka", "RabbitMQ"],
-  },
-  {
-    title: "Cloud & DevOps",
+    title: "Messaging & Cloud",
     items: [
+      "Kafka",
+      "RabbitMQ",
       "AWS",
       "Oracle OCI",
       "Docker",
@@ -165,6 +174,7 @@ export const stackGroups = [
   },
   {
     title: "AI Engineering",
+    ai: true,
     items: [
       "RAG",
       "Embeddings",

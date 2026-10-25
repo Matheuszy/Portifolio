@@ -10,6 +10,7 @@ import {
   mobileAppActivities,
   engineeringPrinciples,
 } from "./portfolioData";
+import NetworkBackground from "./NetworkBackground";
 
 /* ─── small reusables ──────────────────────────────────── */
 
@@ -17,11 +18,119 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
-function SectionLabel({ index, children }) {
+function SectionLabel({ index, route, children }) {
   return (
     <div className="section-label">
       <span className="lbl-index">[{index}]</span>
       {children}
+      {route && <span className="lbl-route">{route}</span>}
+    </div>
+  );
+}
+
+function LayerList({ layers }) {
+  if (!layers?.length) return null;
+  return (
+    <div className="layer-list">
+      {layers.map((l) => (
+        <span className="layer-badge" data-layer={l} key={l}>{l}</span>
+      ))}
+    </div>
+  );
+}
+
+function ArchFlow({ flow }) {
+  if (!flow?.length) return null;
+  return (
+    <div className="arch-flow" aria-label="Fluxo de arquitetura">
+      {flow.map((node, i) => (
+        <span className="arch-step" key={node + i}>
+          {i > 0 && <span className="arch-arrow" aria-hidden="true">→</span>}
+          <span className="arch-node">{node}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+const TERMINAL_TABS = ["profile", "api", "agent"];
+
+function HeroTerminal() {
+  const [tab, setTab] = useState("profile");
+  const [auto, setAuto] = useState(true);
+
+  useEffect(() => {
+    if (!auto) return;
+    const id = setInterval(
+      () => setTab((t) => TERMINAL_TABS[(TERMINAL_TABS.indexOf(t) + 1) % TERMINAL_TABS.length]),
+      7000
+    );
+    return () => clearInterval(id);
+  }, [auto]);
+
+  const pick = (t) => { setAuto(false); setTab(t); };
+  const line = (i) => ({ "--i": i });
+
+  return (
+    <div className={`hud-panel hud-terminal ${tab === "agent" ? "tone-ai" : ""}`}>
+      <div className="terminal-bar">
+        <span className="dot dot-red" />
+        <span className="dot dot-dim" />
+        <span className="dot dot-dim" />
+        <div className="terminal-tabs" role="tablist">
+          {TERMINAL_TABS.map((t) => (
+            <button
+              key={t}
+              role="tab"
+              aria-selected={tab === t}
+              className={tab === t ? "active" : ""}
+              onClick={() => pick(t)}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="terminal-body" key={tab}>
+        {tab === "profile" && (
+          <>
+            <div className="terminal-line" style={line(0)}><span className="prompt">›</span><span>role</span><span className="val">Fullstack Software Engineer</span></div>
+            <div className="terminal-line" style={line(1)}><span className="prompt">›</span><span>stack</span><span className="val">Java · Kotlin · Python · React</span></div>
+            <div className="terminal-line" style={line(2)}><span className="prompt">›</span><span>focus</span><span className="val">Backend · Cloud · AI</span></div>
+            <div className="terminal-line" style={line(3)}><span className="prompt">›</span><span>status</span><span className="val ok">● open to work</span></div>
+          </>
+        )}
+
+        {tab === "api" && (
+          <>
+            <div className="terminal-line"><span className="prompt">›</span><span className="typed" style={{ "--n": 17 }}>GET /api/projects</span></div>
+            <div className="terminal-line" style={line(6)}><span className="val ok">200 OK</span><span>· 42ms</span></div>
+            <pre className="terminal-code" style={line(7)}>
+{`{
+  "layers": ["ui", "api", "db"],
+  "fullstack": `}<span className="ok">true</span>{`,
+  "ai": `}<span className="ai">true</span>{`
+}`}
+            </pre>
+          </>
+        )}
+
+        {tab === "agent" && (
+          <>
+            <div className="terminal-line"><span className="prompt">›</span><span className="typed" style={{ "--n": 15 }}>agent.run(task)</span></div>
+            <div className="terminal-line" style={line(6)}><span className="val ai">✓</span><span>context loaded</span></div>
+            <div className="terminal-line" style={line(7)}><span className="val ai">✓</span><span>tools: mcp · rag</span></div>
+            <div className="terminal-line" style={line(8)}><span className="val ai">✓</span><span>plan → execute → review</span></div>
+            <div className="terminal-line" style={line(9)}><span className="val ai">● response ready</span></div>
+          </>
+        )}
+
+        <div className="terminal-line" style={line(10)}>
+          <span className="prompt">›</span>
+          <span className="val"><span className="terminal-cursor" /></span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -40,6 +149,7 @@ function ProjectCard({ project, onOpen }) {
   return (
     <button
       className="project-card"
+      data-bg={project.ai ? "ai" : "red"}
       onClick={() => onOpen(project)}
       aria-label={`Ver detalhes de ${project.title}`}
     >
@@ -50,6 +160,7 @@ function ProjectCard({ project, onOpen }) {
       </div>
 
       <div>
+        <LayerList layers={project.layers} />
         <h3>{project.title}</h3>
         <p>{project.description}</p>
       </div>
@@ -63,6 +174,7 @@ function FreelanceCard({ project, onOpen }) {
   return (
     <button
       className="project-card freelance-card"
+      data-bg="red"
       onClick={() => onOpen(project)}
       aria-label={`Ver detalhes de ${project.title}`}
     >
@@ -76,6 +188,7 @@ function FreelanceCard({ project, onOpen }) {
         <div className="freelance-client-badge">
           <span>● CLIENTE PRIVADO</span>
         </div>
+        <LayerList layers={project.layers} />
         <h3>{project.title}</h3>
         <p>{project.description}</p>
       </div>
@@ -87,7 +200,7 @@ function FreelanceCard({ project, onOpen }) {
 
 function CertCard({ cert }) {
   return (
-    <div className={`cert-card ${cert.featured ? "featured" : ""}`}>
+    <div className={`cert-card ${cert.featured ? "featured" : ""}`} data-bg={cert.icon === "AI" ? "ai" : "red"}>
       <div className="cert-icon">{cert.icon}</div>
       <div>
         <span className="cert-issuer">{cert.issuer}</span>
@@ -129,6 +242,8 @@ export default function App() {
 
   return (
     <>
+      <NetworkBackground />
+
       {/* ── NAV ──────────────────────────────────────── */}
       <nav className="navbar">
         <button className="brand" onClick={() => scrollTo("hero")} aria-label="Início">
@@ -168,7 +283,7 @@ export default function App() {
         <section id="hero" className="hero-section">
           <div className="hero-inner">
             <div className="hero-copy">
-              <p className="hero-eyebrow">BACKEND · DISTRIBUTED SYSTEMS · AI ENGINEERING</p>
+              <p className="hero-eyebrow">FULLSTACK · BACKEND · AI ENGINEERING</p>
 
               <h1>
                 Eu transformo<br />
@@ -177,9 +292,9 @@ export default function App() {
               </h1>
 
               <p className="hero-description">
-                Software Engineer focado em backend, Java, Kotlin e Python —
-                construindo APIs, sistemas distribuídos, integrações financeiras
-                e soluções com IA.
+                Software Engineer fullstack com foco em backend (Java, Kotlin e
+                Python) — do banco de dados à interface, construindo APIs,
+                sistemas distribuídos, integrações financeiras e soluções com IA.
               </p>
 
               <div className="hero-actions">
@@ -193,47 +308,15 @@ export default function App() {
             </div>
 
             {/* HUD terminal — visual side */}
-            <div className="hero-visual">
-              <div className="hud-panel hud-terminal">
-                <div className="terminal-bar">
-                  <span className="dot dot-red" />
-                  <span className="dot dot-dim" />
-                  <span className="dot dot-dim" />
-                  <span>matheus@dev ~ </span>
-                </div>
-
-                <div className="terminal-line">
-                  <span className="prompt">›</span>
-                  <span>role</span>
-                  <span className="val">Software Engineer</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="prompt">›</span>
-                  <span>stack</span>
-                  <span className="val">Java · Kotlin · Python</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="prompt">›</span>
-                  <span>focus</span>
-                  <span className="val">Backend · Cloud · AI</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="prompt">›</span>
-                  <span>status</span>
-                  <span className="val ok">● open to work</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="prompt">›</span>
-                  <span className="val"><span className="terminal-cursor" /></span>
-                </div>
-              </div>
+            <div className="hero-visual" data-bg="red">
+              <HeroTerminal />
             </div>
           </div>
         </section>
 
         {/* ── ABOUT ────────────────────────────────────── */}
         <section id="about" className="section">
-          <SectionLabel index="01">ABOUT</SectionLabel>
+          <SectionLabel index="01" route="GET /about">ABOUT</SectionLabel>
 
           <div className="about-grid">
             <div className="about-main">
@@ -282,7 +365,7 @@ export default function App() {
 
         {/* ── EXPERIENCE ───────────────────────────────── */}
         <section id="experience" className="section">
-          <SectionLabel index="02">EXPERIENCE</SectionLabel>
+          <SectionLabel index="02" route="GET /experience">EXPERIENCE</SectionLabel>
 
           <div className="experience-block hud-panel">
             <div className="exp-header">
@@ -356,7 +439,7 @@ export default function App() {
 
         {/* ── FREELANCE ────────────────────────────────── */}
         <section id="freelance" className="section">
-          <SectionLabel index="03">FREELANCE</SectionLabel>
+          <SectionLabel index="03" route="GET /freelance">FREELANCE</SectionLabel>
 
           <div className="freelance-intro">
             <p>
@@ -383,7 +466,7 @@ export default function App() {
 
         {/* ── PROJECTS ─────────────────────────────────── */}
         <section id="projects" className="section">
-          <SectionLabel index="04">PROJETOS PESSOAIS</SectionLabel>
+          <SectionLabel index="04" route="GET /projects">PROJETOS PESSOAIS</SectionLabel>
 
           <div className="projects-header">
             <p>
@@ -402,11 +485,11 @@ export default function App() {
 
         {/* ── TECH STACK ───────────────────────────────── */}
         <section id="stack" className="section">
-          <SectionLabel index="05">TECH STACK</SectionLabel>
+          <SectionLabel index="05" route="GET /stack">TECH STACK</SectionLabel>
 
           <div className="stack-section-grid">
             {stackGroups.map((group) => (
-              <div className="stack-group-panel hud-panel" key={group.title}>
+              <div className={`stack-group-panel hud-panel ${group.ai ? "is-ai" : ""}`} data-bg={group.ai ? "ai" : "red"} key={group.title}>
                 <div className="stack-group-header">
                   <span className="stack-group-name">{group.title}</span>
                   <span className="stack-group-count">{group.items.length}</span>
@@ -423,7 +506,7 @@ export default function App() {
 
         {/* ── CERTIFICATIONS ───────────────────────────── */}
         <section id="certifications" className="section">
-          <SectionLabel index="06">CERTIFICATIONS &amp; FORMAÇÃO</SectionLabel>
+          <SectionLabel index="06" route="GET /certifications">CERTIFICATIONS &amp; FORMAÇÃO</SectionLabel>
 
           <div className="certs-full-grid">
             {certifications.map((cert) => (
@@ -434,7 +517,7 @@ export default function App() {
 
         {/* ── ENGINEERING ──────────────────────────────── */}
         <section id="engineering" className="section">
-          <SectionLabel index="07">ENGINEERING</SectionLabel>
+          <SectionLabel index="07" route="GET /engineering">ENGINEERING</SectionLabel>
 
           <div className="engineering-grid">
             <div className="engineering-intro">
@@ -462,7 +545,7 @@ export default function App() {
 
         {/* ── CONTACT ──────────────────────────────────── */}
         <section id="contact" className="section">
-          <SectionLabel index="08">CONTACT</SectionLabel>
+          <SectionLabel index="08" route="POST /contact">CONTACT</SectionLabel>
 
           <div className="contact-grid">
             <div>
@@ -503,7 +586,7 @@ export default function App() {
       {/* ── MODAL ──────────────────────────────────────── */}
       {activeProject && (
         <div className="modal-overlay" onClick={() => setActiveProject(null)}>
-          <div className="project-modal" role="dialog" aria-modal="true" aria-label={activeProject.title} onClick={(e) => e.stopPropagation()}>
+          <div className={`project-modal ${activeProject.ai ? "tone-ai" : ""}`} role="dialog" aria-modal="true" aria-label={activeProject.title} onClick={(e) => e.stopPropagation()}>
             <button
               className="modal-close"
               onClick={() => setActiveProject(null)}
@@ -513,6 +596,8 @@ export default function App() {
             <span className="modal-category">{activeProject.category}</span>
             <h2>{activeProject.title}</h2>
             <p>{activeProject.description}</p>
+
+            <ArchFlow flow={activeProject.flow} />
 
             <div className="modal-stack">
               <TagList items={activeProject.stack} />
