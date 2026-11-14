@@ -138,6 +138,38 @@ export const projects = [
     flow: ["Dev", "NestJS API", "Agente · MCP"],
     ai: true,
   },
+  {
+    id: 8,
+    number: "08",
+    title: "Delivery Microservices",
+    category: "Event-Driven Architecture",
+    description:
+      "Fluxo de entregas com três microsserviços independentes comunicando-se por eventos via RabbitMQ: a criação de uma entrega dispara o rastreamento, que publica um novo evento para o serviço de e-mail enviar a notificação em HTML renderizada com Thymeleaf. Cada serviço mantém seu próprio banco e estado.",
+    stack: [
+      "Java 21",
+      "Spring Boot",
+      "RabbitMQ",
+      "Spring AMQP",
+      "PostgreSQL",
+      "Thymeleaf",
+      "JavaMail",
+    ],
+    github: "https://github.com/Matheuszy/microsservicos-delivery",
+    layers: ["API", "MQ", "DB"],
+    flow: ["Delivery", "RabbitMQ", "Tracking", "RabbitMQ", "Email · SMTP"],
+  },
+  {
+    id: 9,
+    number: "09",
+    title: "Datadog E-commerce",
+    category: "Observability",
+    description:
+      "Prática de observabilidade com Datadog sobre uma API de pedidos fictícia: métricas customizadas e logs estruturados com contexto do pedido, dashboards técnicos e de negócio (erros por forma de pagamento, receita impactada) e monitors para detectar aumento de falhas.",
+    stack: ["Python", "FastAPI", "Datadog", "Metrics", "Logs", "Monitors"],
+    github: "https://github.com/Matheuszy/Datadog-ecommerce",
+    layers: ["API", "OBS"],
+    flow: ["Orders API", "Métricas · Logs", "Datadog", "Dashboards · Alertas"],
+  },
 ];
 
 export const certifications = [
