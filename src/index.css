@@ -175,6 +175,35 @@ a         { text-decoration: none; }
 }
 .nav-links button:hover::after { width: 100%; }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-toggle {
+  height: 32px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  clip-path: var(--clip-sm);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.lang-toggle:hover {
+  border-color: var(--red-dim);
+  background: var(--red-glow);
+}
+
+.lang-toggle .active { color: var(--red); }
+.lang-toggle .lang-sep { opacity: 0.4; }
+
 .nav-social {
   display: flex;
   gap: 7px;
@@ -1551,4 +1580,166 @@ a         { text-decoration: none; }
   .terminal-body .terminal-line,
   .terminal-body .terminal-code,
   .typed { animation: none; opacity: 1; }
+}
+
+/* =========================================================
+   LANGUAGE SWITCH FX
+========================================================= */
+
+.lang-toggle.is-switching {
+  color: var(--cyan);
+  border-color: var(--cyan-dim);
+  background: var(--cyan-glow);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+}
+
+.lang-toggle.is-switching .active { color: var(--cyan); }
+
+.lang-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  pointer-events: none;
+  overflow: hidden;
+  animation: fx-fade 1300ms ease forwards;
+}
+
+.lang-fx::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(34, 211, 238, 0.035) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at center, rgba(34, 211, 238, 0.06), transparent 70%);
+}
+
+.lang-fx-scan {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 14px var(--cyan), 0 0 40px rgba(34, 211, 238, 0.5);
+  animation: fx-scan 750ms linear forwards;
+}
+
+.lang-fx-scan::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(to bottom, transparent, rgba(34, 211, 238, 0.10));
+}
+
+.lang-fx-hud {
+  position: absolute;
+  top: calc(var(--nav-h) + 18px);
+  left: 50%;
+  width: min(340px, calc(100vw - 32px));
+  padding: 14px 16px;
+  transform: translateX(-50%);
+  background: rgba(6, 5, 8, 0.92);
+  border: 1px solid var(--cyan-dim);
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.12);
+  clip-path: var(--clip-sm);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  animation: fx-hud 1300ms ease forwards;
+}
+
+.lang-fx-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lang-fx-prompt { color: var(--cyan); margin-right: 8px; }
+.lang-fx-from { color: var(--muted); }
+.lang-fx-arrow { color: var(--cyan); margin: 0 6px; }
+.lang-fx-to { color: var(--cyan); }
+
+.lang-fx-bar {
+  height: 2px;
+  margin: 12px 0 10px;
+  background: var(--line-bright);
+  overflow: hidden;
+}
+
+.lang-fx-bar span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+  transform-origin: left;
+  animation: fx-bar 1050ms cubic-bezier(0.3, 0.7, 0.4, 1) forwards;
+}
+
+.lang-fx-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cyan);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lang-fx-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: fx-blink 0.35s steps(2) infinite;
+}
+
+[data-fx="decode"],
+[data-fx="decode"] * {
+  color: var(--cyan) !important;
+  text-shadow: 0 0 12px rgba(34, 211, 238, 0.45);
+}
+
+[data-fx="reveal"] {
+  animation: fx-reveal 420ms ease-out var(--fx-delay, 0ms) both;
+}
+
+@keyframes fx-scan {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100vh); }
+}
+
+@keyframes fx-fade {
+  0%, 75% { opacity: 1; }
+  100%    { opacity: 0; }
+}
+
+@keyframes fx-hud {
+  0%   { opacity: 0; transform: translate(-50%, -8px); }
+  12%  { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes fx-bar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes fx-blink {
+  50% { opacity: 0.2; }
+}
+
+@keyframes fx-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+    filter: blur(3px) drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-fx { display: none; }
+  [data-fx] { animation: none !important; }
 }

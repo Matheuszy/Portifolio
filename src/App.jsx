@@ -11,6 +11,8 @@ import {
   engineeringPrinciples,
 } from "./portfolioData";
 import NetworkBackground from "./NetworkBackground";
+import { useI18n } from "./i18n";
+import LangFx from "./LangFx";
 
 /* ─── small reusables ──────────────────────────────────── */
 
@@ -40,13 +42,14 @@ function LayerList({ layers }) {
 }
 
 function ArchFlow({ flow }) {
+  const { t, tr } = useI18n();
   if (!flow?.length) return null;
   return (
-    <div className="arch-flow" aria-label="Fluxo de arquitetura">
+    <div className="arch-flow" aria-label={t.projects.flowLabel}>
       {flow.map((node, i) => (
-        <span className="arch-step" key={node + i}>
+        <span className="arch-step" key={i}>
           {i > 0 && <span className="arch-arrow" aria-hidden="true">→</span>}
-          <span className="arch-node">{node}</span>
+          <span className="arch-node">{tr(node)}</span>
         </span>
       ))}
     </div>
@@ -146,23 +149,24 @@ function TagList({ items }) {
 }
 
 function ProjectCard({ project, onOpen }) {
+  const { t, tr } = useI18n();
   return (
     <button
       className="project-card"
       data-bg={project.ai ? "ai" : "red"}
       onClick={() => onOpen(project)}
-      aria-label={`Ver detalhes de ${project.title}`}
+      aria-label={t.projects.details(project.title)}
     >
       <div className="project-top">
         <span className="project-number">{project.number}</span>
-        <span className="project-category">{project.category}</span>
+        <span className="project-category">{tr(project.category)}</span>
         <span className="project-arrow">↗</span>
       </div>
 
       <div>
         <LayerList layers={project.layers} />
         <h3>{project.title}</h3>
-        <p>{project.description}</p>
+        <p>{tr(project.description)}</p>
       </div>
 
       <TagList items={project.stack} />
@@ -171,26 +175,27 @@ function ProjectCard({ project, onOpen }) {
 }
 
 function FreelanceCard({ project, onOpen }) {
+  const { t, tr } = useI18n();
   return (
     <button
       className="project-card freelance-card"
       data-bg="red"
       onClick={() => onOpen(project)}
-      aria-label={`Ver detalhes de ${project.title}`}
+      aria-label={t.projects.details(project.title)}
     >
       <div className="project-top">
         <span className="project-number">{project.number}</span>
-        <span className="project-category">{project.category}</span>
+        <span className="project-category">{tr(project.category)}</span>
         <span className="project-arrow">↗</span>
       </div>
 
       <div>
         <div className="freelance-client-badge">
-          <span>● CLIENTE PRIVADO</span>
+          <span>{t.freelance.privateBadge}</span>
         </div>
         <LayerList layers={project.layers} />
         <h3>{project.title}</h3>
-        <p>{project.description}</p>
+        <p>{tr(project.description)}</p>
       </div>
 
       <TagList items={project.stack} />
@@ -199,12 +204,13 @@ function FreelanceCard({ project, onOpen }) {
 }
 
 function CertCard({ cert }) {
+  const { tr } = useI18n();
   return (
     <div className={`cert-card ${cert.featured ? "featured" : ""}`} data-bg={cert.icon === "AI" ? "ai" : "red"}>
       <div className="cert-icon">{cert.icon}</div>
       <div>
         <span className="cert-issuer">{cert.issuer}</span>
-        <h3>{cert.title}</h3>
+        <h3>{tr(cert.title)}</h3>
       </div>
     </div>
   );
@@ -215,6 +221,7 @@ function CertCard({ cert }) {
 export default function App() {
   const [activeProject, setActiveProject] = useState(null);
   const [menuOpen, setMenuOpen]           = useState(false);
+  const { lang, t, tr, toggle, fx } = useI18n();
 
   const scrollTo = (id) => {
     setMenuOpen(false);
@@ -243,38 +250,47 @@ export default function App() {
   return (
     <>
       <NetworkBackground />
+      <LangFx />
 
       {/* ── NAV ──────────────────────────────────────── */}
       <nav className="navbar">
-        <button className="brand" onClick={() => scrollTo("hero")} aria-label="Início">
+        <button className="brand" onClick={() => scrollTo("hero")} aria-label={t.nav.home}>
           <span className="brand-mark">M</span>
           <span>MATHEUS.DEV</span>
         </button>
 
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-          <button data-index="01" onClick={() => scrollTo("about")}>Sobre</button>
-          <button data-index="02" onClick={() => scrollTo("experience")}>Experiência</button>
-          <button data-index="03" onClick={() => scrollTo("freelance")}>Freelance</button>
-          <button data-index="04" onClick={() => scrollTo("projects")}>Projetos</button>
-          <button data-index="05" onClick={() => scrollTo("stack")}>Stack</button>
-          <button data-index="06" onClick={() => scrollTo("certifications")}>Certificações</button>
-          <button data-index="07" onClick={() => scrollTo("engineering")}>Engenharia</button>
-          <button data-index="08" onClick={() => scrollTo("contact")}>Contato</button>
+          <button data-index="01" onClick={() => scrollTo("about")}>{t.nav.about}</button>
+          <button data-index="02" onClick={() => scrollTo("experience")}>{t.nav.experience}</button>
+          <button data-index="03" onClick={() => scrollTo("freelance")}>{t.nav.freelance}</button>
+          <button data-index="04" onClick={() => scrollTo("projects")}>{t.nav.projects}</button>
+          <button data-index="05" onClick={() => scrollTo("stack")}>{t.nav.stack}</button>
+          <button data-index="06" onClick={() => scrollTo("certifications")}>{t.nav.certifications}</button>
+          <button data-index="07" onClick={() => scrollTo("engineering")}>{t.nav.engineering}</button>
+          <button data-index="08" onClick={() => scrollTo("contact")}>{t.nav.contact}</button>
         </div>
 
-        <div className="nav-social">
-          <a href={links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">in</a>
-          <a href={links.github}   target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
-        </div>
+        <div className="nav-right">
+          <button className={`lang-toggle ${fx ? "is-switching" : ""}`} onClick={toggle} aria-label={t.nav.switchLang} title={t.nav.switchLang}>
+            <span className={lang === "pt" ? "active" : ""}>PT</span>
+            <span className="lang-sep">/</span>
+            <span className={lang === "en" ? "active" : ""}>EN</span>
+          </button>
 
-        <button
-          className="menu-button"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label="Menu"
-          aria-expanded={menuOpen}
-        >
-          <span /><span /><span />
-        </button>
+          <div className="nav-social">
+            <a href={links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">in</a>
+            <a href={links.github}   target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
+          </div>
+
+          <button
+            className="menu-button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={t.nav.menu}
+            aria-expanded={menuOpen}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
       </nav>
 
       <main className="portfolio">
@@ -286,23 +302,21 @@ export default function App() {
               <p className="hero-eyebrow">FULLSTACK · BACKEND · AI ENGINEERING</p>
 
               <h1>
-                Eu transformo<br />
-                <span className="accent">problemas complexos</span><br />
-                em software.
+                {t.hero.titleA}<br />
+                <span className="accent">{t.hero.titleAccent}</span><br />
+                {t.hero.titleB}
               </h1>
 
               <p className="hero-description">
-                Software Engineer fullstack com foco em backend (Java, Kotlin e
-                Python) — do banco de dados à interface, construindo APIs,
-                sistemas distribuídos, integrações financeiras e soluções com IA.
+                {t.hero.description}
               </p>
 
               <div className="hero-actions">
                 <button className="btn-primary" onClick={() => scrollTo("projects")}>
-                  Ver projetos <Arrow />
+                  {t.hero.viewProjects} <Arrow />
                 </button>
                 <a className="btn-secondary" href={links.whatsapp} target="_blank" rel="noreferrer">
-                  Falar comigo <Arrow />
+                  {t.hero.talk} <Arrow />
                 </a>
               </div>
             </div>
@@ -320,44 +334,32 @@ export default function App() {
 
           <div className="about-grid">
             <div className="about-main">
-              <p className="intro-p">
-                Minha trajetória começou em uma área de negócios, onde tive
-                contato direto com processos, operações internacionais e
-                automação. Com o tempo, passei a transformar esse
-                conhecimento em soluções de software.
-              </p>
-              <p>
-                Hoje meu foco está no desenvolvimento backend e na construção
-                de sistemas organizados, escaláveis e fáceis de evoluir.
-              </p>
-              <p>
-                Trabalho principalmente com Java, Kotlin, Spring Boot e Python,
-                enquanto exploro arquitetura distribuída, cloud, DevOps e
-                engenharia de IA.
-              </p>
+              <p className="intro-p">{t.about.p1}</p>
+              <p>{t.about.p2}</p>
+              <p>{t.about.p3}</p>
 
               <div className="status-line">
                 <span className="status-dot" />
-                <span>Construindo. Aprendendo. Evoluindo.</span>
+                <span>{t.about.status}</span>
               </div>
             </div>
 
             <div className="about-stats">
               <div className="stat-row">
-                <span>FOCO ATUAL</span>
+                <span>{t.about.focusLabel}</span>
                 <strong>Backend Engineering</strong>
               </div>
               <div className="stat-row">
-                <span>ECOSSISTEMA</span>
+                <span>{t.about.ecosystemLabel}</span>
                 <strong>Java · Kotlin · Python</strong>
               </div>
               <div className="stat-row">
-                <span>DIFERENCIAL</span>
+                <span>{t.about.edgeLabel}</span>
                 <strong>Software + AI</strong>
               </div>
               <div className="stat-row">
-                <span>FORMAÇÃO</span>
-                <strong>Eng. de Software — Alura</strong>
+                <span>{t.about.educationLabel}</span>
+                <strong>{t.about.education}</strong>
               </div>
             </div>
           </div>
@@ -376,19 +378,15 @@ export default function App() {
               <span className="exp-type">Backend · Payments · Financial Systems</span>
             </div>
 
-            <p className="exp-description">
-              Desenvolvimento de soluções backend para o ecossistema de pagamentos,
-              trabalhando com APIs, regras financeiras, integrações externas,
-              processamento assíncrono e evolução contínua dos sistemas.
-            </p>
+            <p className="exp-description">{t.experience.descpay}</p>
 
             <div className="activity-grid">
               {descpayActivities.map((a) => (
                 <div className="activity-card" key={a.number}>
                   <span>{a.number}</span>
                   <div>
-                    <h4>{a.title}</h4>
-                    <p>{a.text}</p>
+                    <h4>{tr(a.title)}</h4>
+                    <p>{tr(a.text)}</p>
                   </div>
                 </div>
               ))}
@@ -399,37 +397,23 @@ export default function App() {
           <div className="experience-block hud-panel exp-block--secondary">
             <div className="exp-header">
               <div>
-                <p className="exp-company">PROJETO CONFIDENCIAL</p>
+                <p className="exp-company">{t.experience.confidential}</p>
                 <h3>Fullstack Developer</h3>
               </div>
               <span className="exp-type">Mobile · Payments · Event Tech</span>
             </div>
 
-            <p className="exp-description">
-              Desenvolvimento fullstack de um aplicativo mobile voltado para a
-              digitalização da experiência de consumo em eventos presenciais.
-              A proposta central é eliminar as barreiras físicas do processo de compra —
-              substituindo fichas, dinheiro em espécie e maquininhas por um fluxo
-              100% digital: o usuário deposita créditos diretamente no app e os
-              utiliza para adquirir produtos no evento, sem filas, sem troco e sem
-              depender de infraestrutura física de pagamento.
-            </p>
+            <p className="exp-description">{t.experience.mobile}</p>
 
-            <p className="exp-description exp-description--impact">
-              O impacto esperado vai além da conveniência: ao centralizar as transações
-              digitalmente, o modelo permite rastrear comportamento de consumo em tempo real,
-              reduzir perdas operacionais e abrir novas possibilidades de receita para os
-              organizadores — desde controle de estoque dinâmico até estratégias de
-              precificação por demanda.
-            </p>
+            <p className="exp-description exp-description--impact">{t.experience.mobileImpact}</p>
 
             <div className="activity-grid">
               {mobileAppActivities.map((a) => (
                 <div className="activity-card" key={a.number}>
                   <span>{a.number}</span>
                   <div>
-                    <h4>{a.title}</h4>
-                    <p>{a.text}</p>
+                    <h4>{tr(a.title)}</h4>
+                    <p>{tr(a.text)}</p>
                   </div>
                 </div>
               ))}
@@ -442,11 +426,8 @@ export default function App() {
           <SectionLabel index="03" route="GET /freelance">FREELANCE</SectionLabel>
 
           <div className="freelance-intro">
-            <p>
-              Projetos desenvolvidos para clientes — soluções com impacto
-              direto no negócio, construídas com foco em qualidade e escalabilidade.
-            </p>
-            <span className="projects-count">{freelanceProjects.length} projeto{freelanceProjects.length !== 1 ? "s" : ""}</span>
+            <p>{t.freelance.intro}</p>
+            <span className="projects-count">{t.freelance.count(freelanceProjects.length)}</span>
           </div>
 
           <div className="projects-grid">
@@ -458,7 +439,7 @@ export default function App() {
             <div className="project-card project-card--placeholder">
               <div className="placeholder-inner">
                 <span className="placeholder-icon">+</span>
-                <p>Mais projetos em breve</p>
+                <p>{t.freelance.more}</p>
               </div>
             </div>
           </div>
@@ -466,14 +447,11 @@ export default function App() {
 
         {/* ── PROJECTS ─────────────────────────────────── */}
         <section id="projects" className="section">
-          <SectionLabel index="04" route="GET /projects">PROJETOS PESSOAIS</SectionLabel>
+          <SectionLabel index="04" route="GET /projects">{t.projects.label}</SectionLabel>
 
           <div className="projects-header">
-            <p>
-              Projetos que representam meu processo de aprendizado,
-              experimentação e construção de software.
-            </p>
-            <span className="projects-count">{projects.length} projeto{projects.length !== 1 ? "s" : ""} selecionado{projects.length !== 1 ? "s" : ""}</span>
+            <p>{t.projects.intro}</p>
+            <span className="projects-count">{t.projects.count(projects.length)}</span>
           </div>
 
           <div className="projects-grid">
@@ -506,11 +484,11 @@ export default function App() {
 
         {/* ── CERTIFICATIONS ───────────────────────────── */}
         <section id="certifications" className="section">
-          <SectionLabel index="06" route="GET /certifications">CERTIFICATIONS &amp; FORMAÇÃO</SectionLabel>
+          <SectionLabel index="06" route="GET /certifications">{t.certifications.label}</SectionLabel>
 
           <div className="certs-full-grid">
             {certifications.map((cert) => (
-              <CertCard key={cert.title} cert={cert} />
+              <CertCard key={cert.icon + cert.issuer} cert={cert} />
             ))}
           </div>
         </section>
@@ -522,21 +500,15 @@ export default function App() {
           <div className="engineering-grid">
             <div className="engineering-intro">
               <span className="big-num">07</span>
-              <p>
-                Tecnologia é consequência. Antes dela vem o problema,
-                o contexto e as decisões que precisam ser tomadas.
-              </p>
-              <p>
-                Meu objetivo é construir soluções que façam sentido para o
-                negócio e que continuem fazendo sentido quando o sistema crescer.
-              </p>
+              <p>{t.engineering.p1}</p>
+              <p>{t.engineering.p2}</p>
             </div>
 
             <div className="principles-list">
               {engineeringPrinciples.map((p, i) => (
-                <div className="principle" key={p}>
+                <div className="principle" key={i}>
                   <span className="p-num">{String(i + 1).padStart(2, "0")}</span>
-                  <p>{p}</p>
+                  <p>{tr(p)}</p>
                 </div>
               ))}
             </div>
@@ -551,14 +523,12 @@ export default function App() {
             <div>
               <p className="contact-eyebrow">OPEN TO OPPORTUNITIES &amp; COLLABORATIONS</p>
               <h2>
-                Tem um problema<br />
-                interessante?<br />
-                <span className="accent">Vamos conversar.</span>
+                {t.contact.titleA}<br />
+                {t.contact.titleB}<br />
+                <span className="accent">{t.contact.titleAccent}</span>
               </h2>
               <p className="contact-sub">
-                Estou aberto a oportunidades em engenharia de software,
-                backend, Java/Kotlin, sistemas distribuídos e projetos que
-                envolvam IA.
+                {t.contact.sub}
               </p>
             </div>
 
@@ -580,7 +550,7 @@ export default function App() {
 
       <footer className="footer">
         <span>© {new Date().getFullYear()} Matheus Carlos</span>
-        <span>Software Engineer · Brazil</span>
+        <span>{t.footer}</span>
       </footer>
 
       {/* ── MODAL ──────────────────────────────────────── */}
@@ -590,12 +560,12 @@ export default function App() {
             <button
               className="modal-close"
               onClick={() => setActiveProject(null)}
-              aria-label="Fechar"
+              aria-label={t.projects.close}
             >×</button>
 
-            <span className="modal-category">{activeProject.category}</span>
+            <span className="modal-category">{tr(activeProject.category)}</span>
             <h2>{activeProject.title}</h2>
-            <p>{activeProject.description}</p>
+            <p>{tr(activeProject.description)}</p>
 
             <ArchFlow flow={activeProject.flow} />
 
@@ -609,7 +579,7 @@ export default function App() {
               rel="noreferrer"
               className="modal-github"
             >
-              Ver no GitHub <Arrow />
+              {t.projects.github} <Arrow />
             </a>
           </div>
         </div>
