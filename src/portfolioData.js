@@ -38,6 +38,27 @@ export const projects = [
   {
     id: 1,
     number: "01",
+    title: "Arcana",
+    category: "Full-Stack · Real-Time",
+    description:
+      "Plataforma para mesas de RPG online: mestres criam e administram mesas, jogadores montam fichas de personagem e conversam e rolam dados em tempo real via WebSocket. Autenticação JWT, migrations Flyway, testes com Testcontainers e deploy contínuo em VPS com Docker, Traefik e rollback automático.",
+    stack: [
+      "Java 17",
+      "Spring Boot",
+      "WebSocket",
+      "React",
+      "TypeScript",
+      "PostgreSQL",
+      "Docker",
+      "GitHub Actions",
+    ],
+    github: "https://github.com/Matheuszy/Arcana-Chronicles",
+    layers: ["UI", "API", "DB"],
+    flow: ["React SPA", "Nginx", "Spring Boot · STOMP", "PostgreSQL"],
+  },
+  {
+    id: 2,
+    number: "02",
     title: "Basilico",
     category: "Management API",
     description:
@@ -48,8 +69,8 @@ export const projects = [
     flow: ["Client", "Spring Boot API", "PostgreSQL"],
   },
   {
-    id: 2,
-    number: "02",
+    id: 3,
+    number: "03",
     title: "Sentinel",
     category: "Fraud Detection",
     description:
@@ -61,8 +82,8 @@ export const projects = [
     ai: true,
   },
   {
-    id: 3,
-    number: "03",
+    id: 4,
+    number: "04",
     title: "Smart Product Recommender",
     category: "AI Engine",
     description:
@@ -74,8 +95,8 @@ export const projects = [
     ai: true,
   },
   {
-    id: 4,
-    number: "04",
+    id: 5,
+    number: "05",
     title: "Java Microservices",
     category: "Distributed Systems",
     description:
@@ -86,8 +107,8 @@ export const projects = [
     flow: ["Client", "Microsserviços Java"],
   },
   {
-    id: 5,
-    number: "05",
+    id: 6,
+    number: "06",
     title: "Credit Prediction",
     category: "Analytics",
     description:
@@ -99,8 +120,8 @@ export const projects = [
     ai: true,
   },
   {
-    id: 6,
-    number: "06",
+    id: 7,
+    number: "07",
     title: "Code Connect",
     category: "AI Engineering",
     description:
